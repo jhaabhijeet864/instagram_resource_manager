@@ -401,7 +401,7 @@ function PluginsContent() {
               {
                 title: "Slack Engineering Bot",
                 category: "notification",
-                desc: "Post real-time DM link clicks and newsletter leads to your Slack engineering channel.",
+                desc: "Post real-time DM link clicks and newsletter leads to any Slack channel.",
                 status: "Available via SDK",
               },
               {
@@ -567,7 +567,7 @@ function PluginsContent() {
             </div>
 
             <p className="text-xs text-stone-600">
-              Paste a standard DevResource Plugin JSON manifest. The plugin will be validated and loaded into your active runtime registry.
+              Paste a standard Resource Manager plugin JSON manifest. The plugin will be validated and loaded into your active runtime registry.
             </p>
 
             <form onSubmit={handleInstallCustom} className="space-y-3 text-xs">

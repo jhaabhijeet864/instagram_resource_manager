@@ -24,15 +24,15 @@ export default function ResourceManagerPage() {
     resource_id: `RES-00${Math.floor(Math.random() * 90) + 10}`,
     slug: "",
     title: "",
-    category: "AI",
+    category: "System Architecture",
     keyword: "",
     description: "",
     fileName: "",
-    fileSize: "12.4 MB",
+    fileSize: "3.5 MB",
     fileType: "PDF",
     storageUrl: "",
-    tags: ["ai", "guide"],
-    highlights: ["Complete architecture breakdown", "Runnable starter code"],
+    tags: ["architecture", "backend"],
+    highlights: ["Complete architecture breakdown", "Runnable production code"],
   });
 
   const fetchResources = async () => {
@@ -301,7 +301,7 @@ export default function ResourceManagerPage() {
                     type="text"
                     value={formData.slug}
                     onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                    placeholder="e.g. system-design-cheatsheet"
+                    placeholder="e.g. content-calendar-2026"
                     className="w-full p-2 rounded-lg border border-[#E8E2D8] bg-[#FAF8F5] font-mono text-xs"
                     required
                   />
@@ -314,7 +314,7 @@ export default function ResourceManagerPage() {
                   type="text"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  placeholder="e.g. System Design Cheatsheet: Scaling to 10M Users"
+                  placeholder="e.g. The 90-Day Content Calendar Planner"
                   className="w-full p-2 rounded-lg border border-[#E8E2D8] bg-[#FAF8F5] text-xs"
                   required
                 />
@@ -365,7 +365,7 @@ export default function ResourceManagerPage() {
                     type="text"
                     value={formData.fileName}
                     onChange={(e) => setFormData({ ...formData, fileName: e.target.value })}
-                    placeholder="System_Design_v1.pdf"
+                    placeholder="System_Calendar_v1.pdf"
                     className="w-full p-2 rounded-lg border border-[#E8E2D8] bg-[#FAF8F5] text-xs"
                   />
                 </div>

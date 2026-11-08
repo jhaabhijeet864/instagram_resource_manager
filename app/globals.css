@@ -1,6 +1,7 @@
 /* ==============================================================================
-   DEVRESOURCE DESIGN SYSTEM: Creamy Warm Paper & Editorial Typography
-   Strict Anti-Slop Directive: Clean ivory, warm stone, charcoal, and warm amber.
+   DEVRESOURCE DESIGN SYSTEM: Creamy Warm Paper & Photorealistic Tactile Finishes
+   Strict Anti-Slop Directive: Ivory, warm alabaster, brushed stone, subtle specular highlights.
+   No AI buzzwords, no neon cyberpunk gradients.
    ============================================================================== */
 
 @tailwind base;
@@ -26,42 +27,59 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Editorial paper surface panels */
+/* Photorealistic Floating Curved Bar (Optical Glass & Tactile Pill) */
+.photoreal-floating-bar {
+  background: rgba(253, 251, 247, 0.88);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid rgba(229, 222, 206, 0.85);
+  box-shadow:
+    inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -1px 1px 0 rgba(216, 206, 192, 0.35),
+    0 16px 36px -8px rgba(44, 38, 34, 0.12),
+    0 6px 14px -3px rgba(44, 38, 34, 0.05),
+    0 1px 3px rgba(44, 38, 34, 0.04);
+}
+
+/* Tactile floating card with physical paper/lens bevel */
 .creamy-card {
   background: #FFFFFF;
   border: 1px solid #E8E2D8;
-  box-shadow: 0 2px 8px -2px rgba(44, 38, 34, 0.05), 0 1px 3px rgba(44, 38, 34, 0.03);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.8),
+    0 2px 8px -2px rgba(44, 38, 34, 0.05),
+    0 1px 3px rgba(44, 38, 34, 0.03);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .creamy-card:hover {
   border-color: #D6CDBD;
-  box-shadow: 0 8px 24px -4px rgba(44, 38, 34, 0.09), 0 2px 6px rgba(44, 38, 34, 0.04);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.9),
+    0 10px 28px -6px rgba(44, 38, 34, 0.09),
+    0 2px 6px rgba(44, 38, 34, 0.04);
 }
 
-.creamy-card-subtle {
-  background: #FDFBF7;
-  border: 1px solid #EFE9DF;
-}
-
-/* Editorial badges */
+/* Photorealistic badges */
 .creamy-badge {
   display: inline-flex;
   align-items: center;
   font-size: 0.72rem;
   font-weight: 600;
-  letter-spacing: 0.025em;
-  padding: 0.2rem 0.55rem;
+  letter-spacing: 0.02em;
+  padding: 0.22rem 0.6rem;
   border-radius: 9999px;
   background-color: #F4EFEA;
   color: #78716C;
   border: 1px solid #E4DCD0;
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.8);
 }
 
 .creamy-badge-accent {
   background-color: #FEF3C7;
   color: #92400E;
   border: 1px solid #FDE68A;
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.6);
 }
 
 .creamy-badge-success {
@@ -70,25 +88,36 @@ body {
   border: 1px solid #A7F3D0;
 }
 
-/* Editorial Buttons */
+/* Tactile Buttons with realistic physical press */
 .btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   font-weight: 600;
   font-size: 0.875rem;
-  padding: 0.625rem 1.25rem;
-  border-radius: 0.65rem;
+  padding: 0.6rem 1.25rem;
+  border-radius: 9999px;
   background-color: #1C1917;
   color: #FAF8F5;
   border: 1px solid #1C1917;
+  box-shadow:
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.15),
+    0 4px 12px -2px rgba(28, 25, 23, 0.2),
+    0 1px 2px rgba(28, 25, 23, 0.1);
   transition: all 0.15s ease;
 }
 
 .btn-primary:hover {
   background-color: #292524;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(28, 25, 23, 0.15);
+  box-shadow:
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.2),
+    0 6px 16px -2px rgba(28, 25, 23, 0.25);
+}
+
+.btn-primary:active {
+  transform: translateY(0.5px);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .btn-secondary {
@@ -97,20 +126,27 @@ body {
   justify-content: center;
   font-weight: 600;
   font-size: 0.875rem;
-  padding: 0.625rem 1.25rem;
-  border-radius: 0.65rem;
+  padding: 0.6rem 1.25rem;
+  border-radius: 9999px;
   background-color: #FFFFFF;
   color: #292524;
   border: 1px solid #E2D9CC;
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.9),
+    0 1px 3px rgba(44, 38, 34, 0.04);
   transition: all 0.15s ease;
 }
 
 .btn-secondary:hover {
   background-color: #FAF7F2;
   border-color: #D0C5B5;
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 1),
+    0 4px 10px -2px rgba(44, 38, 34, 0.08);
 }
 
-/* Code Snippet block with creamy container */
+/* Code Snippet block */
 .code-container {
   background-color: #18181B;
   color: #F4F4F5;
@@ -119,8 +155,8 @@ body {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
-/* Prompt Box */
-.prompt-box {
+/* Spec box */
+.spec-box {
   background-color: #FAF7F2;
   border: 1px solid #E8E2D8;
   border-left: 3px solid #B45309;
@@ -141,3 +177,107 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #BAAF9F;
 }
+
+/* ==============================================================================
+   MOTION GRAPHICS & DYNAMIC VISUAL EFFECTS FOR DASHBOARD
+   ============================================================================== */
+
+@keyframes flowDash {
+  to {
+    stroke-dashoffset: -40;
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+    filter: drop-shadow(0 0 8px rgba(180, 83, 9, 0.4));
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 1;
+    filter: drop-shadow(0 0 16px rgba(180, 83, 9, 0.7));
+  }
+}
+
+@keyframes radarSweep {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes shimmerEffect {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes floatSoft {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes particleFlow {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.motion-flow-dash {
+  stroke-dasharray: 6 6;
+  animation: flowDash 1.2s linear infinite;
+}
+
+.motion-pulse-beacon {
+  animation: pulseGlow 2.5s ease-in-out infinite;
+}
+
+.motion-radar {
+  animation: radarSweep 8s linear infinite;
+}
+
+.motion-shimmer {
+  background: linear-gradient(90deg, transparent 0%, rgba(180, 83, 9, 0.15) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmerEffect 2.8s infinite;
+}
+
+.motion-float {
+  animation: floatSoft 3s ease-in-out infinite;
+}
+
+.motion-particle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 50%, rgba(180, 83, 9, 0.25) 0%, transparent 70%);
+}
+
+.motion-glass-dark {
+  background: rgba(24, 24, 27, 0.95);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+

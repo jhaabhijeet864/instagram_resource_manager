@@ -58,7 +58,7 @@ export function DashboardClient() {
   // URL builder state
   const [builderResource, setBuilderResource] = useState(RESOURCES[0]?.slug ?? "");
   const [builderCampaign, setBuilderCampaign] = useState("rag_carousel_01");
-  const [builderKeyword, setBuilderKeyword] = useState("RAG");
+  const [builderKeyword, setBuilderKeyword] = useState(RESOURCES[0]?.keyword ?? "SEARCH");
 
   const { show, toast } = useToast();
 

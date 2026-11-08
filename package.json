@@ -9,6 +9,9 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "lint": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "resource:cli": "node scripts/resource-manager.mjs",
     "plugins:list": "node scripts/plugins-runner.mjs list",
     "plugins:test": "node scripts/plugins-runner.mjs test",
@@ -26,12 +29,14 @@
     "recharts": "^2.12.7"
   },
   "devDependencies": {
-    "@types/node": "^20.16.0",
+    "@types/node": "^24.19.2",
     "@types/react": "^18.3.11",
     "@types/react-dom": "^18.3.1",
+    "@vitest/coverage-v8": "^5.1.0",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.13",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "vitest": "^5.1.0"
   }
 }

@@ -10,7 +10,9 @@ export type PluginCategory =
   | "storage"
   | "analytics"
   | "notification"
-  | "integration";
+  | "integration"
+  | "test"
+  | "c";
 
 export interface ConfigField {
   key: string;

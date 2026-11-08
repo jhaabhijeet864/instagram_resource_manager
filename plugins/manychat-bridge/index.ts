@@ -10,7 +10,7 @@ export const manychatBridgePlugin = definePlugin({
   id: "manychat-bridge",
   name: "Manychat Automation Bridge",
   version: "1.1.0",
-  author: "Official DevResource Core",
+  author: "Official Resource Manager Core",
   category: "automation",
   description:
     "Bridges Instagram Manychat direct messages to permanent resource links and updates subscriber custom fields when resources are downloaded.",
@@ -30,12 +30,12 @@ export const manychatBridgePlugin = definePlugin({
       key: "downloadTag",
       label: "Subscriber Tag on Download",
       type: "text",
-      defaultValue: "downloaded_engineering_resource",
+      defaultValue: "downloaded_free_resource",
     },
   ],
   settings: {
     apiKey: "",
-    downloadTag: "downloaded_engineering_resource",
+    downloadTag: "downloaded_free_resource",
   },
   hooks: {
     async onResourceVisit(event: ResourceVisitEvent, context: PluginContext) {

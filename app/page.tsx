@@ -1,22 +1,23 @@
 import Link from "next/link";
-import { CATEGORIES, PROFILE, RESOURCES, getResourceBySlug } from "@/lib/catalog";
+import { PROFILE, RESOURCES, getResourceBySlug } from "@/lib/catalog";
 import { ResourceExplorer } from "@/components/home/ResourceExplorer";
 import { NewsletterForm } from "@/components/home/NewsletterForm";
 
 export default function HomePage() {
-  const featured = getResourceBySlug("rag-starter-kit") ?? RESOURCES[0];
+  const featured = getResourceBySlug("distributed-search-pipeline") ?? RESOURCES[0];
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8 md:py-12 space-y-12">
-      {/* ================= HERO / CREATOR SPOTLIGHT ================= */}
-      <section className="text-center relative pt-4 pb-2 space-y-4">
-        <div className="inline-flex items-center px-3.5 py-1 rounded-full text-xs font-medium bg-[#F4EFEA] text-stone-700 border border-[#E2D9CC]">
+    <div className="max-w-6xl mx-auto px-4 py-6 md:py-10 space-y-12 sm:space-y-14">
+      {/* ================= HERO / TOP COMPONENT ================= */}
+      <section className="text-center relative pt-2 pb-2 space-y-4 max-w-4xl mx-auto">
+        {/* Optical status badge */}
+        <div className="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-semibold bg-[#F4EFEA] text-stone-700 border border-[#E2D9CC] shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
           <span className="w-2 h-2 rounded-full bg-amber-600 mr-2" />
-          Direct Instagram Reel &amp; Manychat Distribution Interface
+          Permanent Delivery Layer for Instagram Reels &amp; Manychat DMs
         </div>
 
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-stone-900 tracking-tight leading-tight max-w-3xl mx-auto">
-          Production AI, System Design &amp; Engineering Resources
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-stone-900 tracking-tight leading-tight">
+          Production System Architecture, Distributed Backends &amp; Creator Engineering
         </h1>
 
         <p className="text-sm md:text-base text-stone-600 max-w-2xl mx-auto leading-relaxed">
@@ -25,12 +26,12 @@ export default function HomePage() {
 
         {/* Creator social trust strip */}
         <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-stone-500 pt-2">
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2.5">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={PROFILE.avatar}
               alt="Creator Profile"
-              className="w-7 h-7 rounded-full object-cover border border-[#E8E2D8]"
+              className="w-7 h-7 rounded-full object-cover border border-[#E2D9CC] shadow-xs"
             />
             <span className="font-semibold text-stone-900">{PROFILE.name}</span>
             <span className="text-amber-800 font-mono">@{PROFILE.handle}</span>
@@ -40,14 +41,14 @@ export default function HomePage() {
             href={PROFILE.instagramUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center text-stone-700 hover:text-stone-900 font-medium transition-colors"
+            className="inline-flex items-center text-stone-700 hover:text-stone-900 font-semibold transition-colors"
           >
-            Follow on Instagram ↗
+            Instagram Profile ↗
           </a>
           <span className="text-stone-300 hidden sm:inline">•</span>
-          <span className="text-emerald-700 font-medium flex items-center">
+          <span className="text-emerald-700 font-semibold flex items-center">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 mr-1.5" />
-            Verified Master Files on Google Drive
+            Verified Master Copies on Google Drive
           </span>
         </div>
       </section>
@@ -58,7 +59,7 @@ export default function HomePage() {
           <div className="max-w-2xl space-y-4">
             <div className="flex items-center space-x-2.5 flex-wrap">
               <span className="creamy-badge creamy-badge-accent uppercase tracking-wider">
-                Featured Guide
+                Flagship Blueprint
               </span>
               <span className="creamy-badge">{featured.category}</span>
               <span className="text-xs font-mono text-stone-400">{featured.resource_id}</span>
@@ -73,7 +74,7 @@ export default function HomePage() {
             </p>
 
             {featured.highlights ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 text-xs text-stone-600">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2 text-xs text-stone-600">
                 {featured.highlights.map((h) => (
                   <div key={h} className="flex items-center space-x-2">
                     <span className="text-emerald-600 font-bold">✓</span>
@@ -85,8 +86,8 @@ export default function HomePage() {
           </div>
 
           {/* Action card */}
-          <div className="w-full lg:w-80 flex-shrink-0 p-6 rounded-2xl bg-[#FAF8F5] border border-[#E8E2D8] space-y-4 text-center">
-            <div className="w-12 h-12 rounded-xl bg-white border border-[#E8E2D8] flex items-center justify-center text-stone-800 mx-auto shadow-xs">
+          <div className="w-full lg:w-80 flex-shrink-0 p-6 rounded-2xl bg-[#FAF8F5] border border-[#E8E2D8] shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] space-y-4 text-center">
+            <div className="w-12 h-12 rounded-full bg-white border border-[#E2D9CC] flex items-center justify-center text-stone-800 mx-auto shadow-xs">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
@@ -98,20 +99,22 @@ export default function HomePage() {
             </div>
 
             <div>
-              <p className="text-xs font-medium text-stone-500">Instagram Trigger Keyword</p>
-              <p className="text-lg font-mono font-bold text-amber-900">"{featured.keyword}"</p>
+              <p className="text-xs font-medium text-stone-500">Instagram DM Trigger Keyword</p>
+              <p className="text-xl font-mono font-bold text-amber-900 tracking-wide">
+                "{featured.keyword}"
+              </p>
             </div>
 
             <div className="text-[11px] text-stone-500 space-y-1">
               <div>Format: <strong>{featured.fileType.toUpperCase()}</strong> ({featured.fileSize})</div>
-              <div>Master Storage: <strong>Google Drive Verified</strong></div>
+              <div>Storage: <strong>Google Drive Master Copy</strong></div>
             </div>
 
             <Link
               href={`/r/${featured.slug}`}
               className="btn-primary w-full text-xs py-2.5"
             >
-              Read Guide &amp; Download →
+              Inspect Blueprint &amp; Download →
             </Link>
           </div>
         </div>
@@ -121,7 +124,7 @@ export default function HomePage() {
       <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="p-5 rounded-2xl bg-white border border-[#E8E2D8] space-y-2 shadow-xs">
           <div className="flex items-center space-x-2 text-xs font-bold text-stone-800 uppercase tracking-wider">
-            <span className="w-5 h-5 rounded-md bg-[#F4EFEA] border border-[#E2D9CC] flex items-center justify-center text-[10px]">
+            <span className="w-5 h-5 rounded-full bg-[#F4EFEA] border border-[#E2D9CC] flex items-center justify-center text-[10px]">
               1
             </span>
             <span>Permanent Public Link</span>
@@ -133,7 +136,7 @@ export default function HomePage() {
 
         <div className="p-5 rounded-2xl bg-white border border-[#E8E2D8] space-y-2 shadow-xs">
           <div className="flex items-center space-x-2 text-xs font-bold text-stone-800 uppercase tracking-wider">
-            <span className="w-5 h-5 rounded-md bg-[#F4EFEA] border border-[#E2D9CC] flex items-center justify-center text-[10px]">
+            <span className="w-5 h-5 rounded-full bg-[#F4EFEA] border border-[#E2D9CC] flex items-center justify-center text-[10px]">
               2
             </span>
             <span>True Intent vs Delivery</span>
@@ -145,13 +148,13 @@ export default function HomePage() {
 
         <div className="p-5 rounded-2xl bg-white border border-[#E8E2D8] space-y-2 shadow-xs">
           <div className="flex items-center space-x-2 text-xs font-bold text-stone-800 uppercase tracking-wider">
-            <span className="w-5 h-5 rounded-md bg-[#F4EFEA] border border-[#E2D9CC] flex items-center justify-center text-[10px]">
+            <span className="w-5 h-5 rounded-full bg-[#F4EFEA] border border-[#E2D9CC] flex items-center justify-center text-[10px]">
               3
             </span>
             <span>Pluggable Extensibility</span>
           </div>
           <p className="text-xs text-stone-600 leading-relaxed">
-            Plug in Meta Graph API, Manychat automation, Cloudflare R2, or custom Webhooks through our plugin architecture.
+            Plug in Meta Graph API, Manychat automation, Cloudflare R2, or custom Webhooks through our extensible plugin engine.
           </p>
         </div>
       </section>
@@ -164,11 +167,11 @@ export default function HomePage() {
               Master Resource Catalog
             </h2>
             <p className="text-xs text-stone-500 mt-0.5">
-              Browse production-ready architectures, code templates, and prompts.
+              Browse production architectures, backend code templates, and automation vaults.
             </p>
           </div>
           <span className="text-xs font-mono text-stone-400">
-            {RESOURCES.length} resources published
+            {RESOURCES.length} resources available
           </span>
         </div>
 

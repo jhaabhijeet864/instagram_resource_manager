@@ -2,7 +2,8 @@
 
 // ============================================================================
 // BRANDED EDITORIAL RESOURCE LANDING VIEW: /r/[slug]
-// Clean creamy paper aesthetic with campaign attribution, TOC, snippet & prompts.
+// Clean creamy paper aesthetic with campaign attribution, TOC, snippet & specs.
+// Zero AI buzzwords.
 // ============================================================================
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
@@ -12,13 +13,13 @@ import { PROFILE } from "@/lib/catalog";
 import { logVisit, logDownloadClick, logEmailSignup } from "@/lib/analytics";
 import { useToast } from "@/components/useToast";
 
-type TabName = "overview" | "code" | "prompts" | "diagram";
+type TabName = "overview" | "code" | "specs" | "diagram";
 
 const TABS: { id: TabName; icon: string; label: string }[] = [
   { id: "overview", icon: "📑", label: "Guide Overview" },
   { id: "code", icon: "💻", label: "Code Snippet" },
-  { id: "prompts", icon: "⚡", label: "Prompt Vault" },
-  { id: "diagram", icon: "📐", label: "Architecture Flow" },
+  { id: "specs", icon: "📐", label: "Technical Specs" },
+  { id: "diagram", icon: "📊", label: "Architecture Flow" },
 ];
 
 export function ResourceDetail({ resource }: { resource: Resource }) {
@@ -68,7 +69,7 @@ export function ResourceDetail({ resource }: { resource: Resource }) {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8 md:py-12">
+    <div className="max-w-4xl mx-auto px-4 py-4 md:py-8">
       {toast}
 
       <article className="space-y-8">
@@ -85,15 +86,15 @@ export function ResourceDetail({ resource }: { resource: Resource }) {
 
         {/* Campaign attribution notice */}
         {utmCampaign ? (
-          <div className="p-3.5 rounded-xl bg-amber-50/70 border border-amber-200/80 flex items-center justify-between text-xs text-amber-900">
+          <div className="p-3.5 rounded-2xl bg-amber-50/70 border border-amber-200/80 flex items-center justify-between text-xs text-amber-900 shadow-xs">
             <div className="flex items-center space-x-2">
               <span>🎯</span>
               <span>
-                Delivered via Instagram Campaign: <strong className="font-mono">{utmCampaign}</strong>
+                Delivered via Instagram Reel Campaign: <strong className="font-mono">{utmCampaign}</strong>
               </span>
             </div>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-100 border border-amber-300/60 font-semibold">
-              UTM Tracked
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-100 border border-amber-300/60 font-semibold">
+              UTM Attributed
             </span>
           </div>
         ) : null}
@@ -108,7 +109,7 @@ export function ResourceDetail({ resource }: { resource: Resource }) {
             {resource.badge ? (
               <span className="creamy-badge creamy-badge-success">{resource.badge}</span>
             ) : (
-              <span className="creamy-badge">Verified File</span>
+              <span className="creamy-badge">Verified Master File</span>
             )}
           </div>
 
@@ -176,7 +177,7 @@ export function ResourceDetail({ resource }: { resource: Resource }) {
             </div>
             <div
               className={`flex items-center space-x-2 text-[11px] font-mono ${
-                downloadLogged ? "text-emerald-700" : "text-stone-500"
+                downloadLogged ? "text-emerald-700 font-semibold" : "text-stone-500"
               }`}
             >
               <span id="click-status-tag">
@@ -192,7 +193,7 @@ export function ResourceDetail({ resource }: { resource: Resource }) {
             {TABS.map((t) => {
               const hasContent =
                 (t.id === "code" && resource.codeSnippet) ||
-                (t.id === "prompts" && (resource.samplePrompts || []).length > 0) ||
+                (t.id === "specs" && (resource.specs || []).length > 0) ||
                 t.id === "overview" ||
                 t.id === "diagram";
               if (!hasContent) return null;
@@ -202,7 +203,7 @@ export function ResourceDetail({ resource }: { resource: Resource }) {
                   key={t.id}
                   type="button"
                   onClick={() => setTab(t.id)}
-                  className={`px-4 py-2.5 text-xs font-semibold rounded-t-lg transition-colors whitespace-nowrap border-b-2 ${
+                  className={`px-4 py-2 text-xs font-semibold rounded-t-xl transition-colors whitespace-nowrap border-b-2 ${
                     tab === t.id
                       ? "border-stone-900 text-stone-900 bg-white"
                       : "border-transparent text-stone-500 hover:text-stone-900"
@@ -277,32 +278,19 @@ export function ResourceDetail({ resource }: { resource: Resource }) {
             </div>
           ) : null}
 
-          {tab === "prompts" && (resource.samplePrompts || []).length > 0 ? (
+          {tab === "specs" && (resource.specs || []).length > 0 ? (
             <div className="creamy-card rounded-2xl p-6 bg-white border border-[#E8E2D8] space-y-4">
               <div className="flex items-center justify-between mb-2">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-stone-700">
-                  ⚡ Included Prompt Templates
+                  📐 Technical Specifications &amp; Invalidation Policies
                 </h3>
-                <span className="text-[11px] text-stone-400">Click Copy to use directly</span>
+                <span className="text-[11px] text-stone-400">Production Standards</span>
               </div>
               <div className="space-y-3">
-                {(resource.samplePrompts || []).map((p, idx) => (
-                  <div key={idx} className="prompt-box rounded-xl p-4 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <h4 className="text-xs font-bold text-stone-900">
-                        {p.title || `Prompt ${idx + 1}`}
-                      </h4>
-                      <button
-                        type="button"
-                        onClick={() => copyText(p.prompt, "Prompt copied to clipboard!")}
-                        className="btn-secondary text-[11px] px-2.5 py-1"
-                      >
-                        Copy
-                      </button>
-                    </div>
-                    <p className="text-xs text-stone-700 font-mono whitespace-pre-wrap leading-relaxed select-all">
-                      {p.prompt}
-                    </p>
+                {(resource.specs || []).map((s, idx) => (
+                  <div key={idx} className="spec-box rounded-xl p-4 space-y-1">
+                    <h4 className="text-xs font-bold text-stone-900">{s.title}</h4>
+                    <p className="text-xs text-stone-600 leading-relaxed">{s.detail}</p>
                   </div>
                 ))}
               </div>
@@ -312,7 +300,7 @@ export function ResourceDetail({ resource }: { resource: Resource }) {
           {tab === "diagram" ? (
             <div className="creamy-card rounded-2xl p-6 bg-white border border-[#E8E2D8] space-y-4">
               <div>
-                <h3 className="text-sm font-bold text-stone-900">Instagram ➜ Website ➜ Storage Flow</h3>
+                <h3 className="text-sm font-bold text-stone-900">Instagram ➜ Website ➜ Storage Pipeline</h3>
                 <p className="text-xs text-stone-500">
                   How audience intent is mapped to verified file delivery without dead links.
                 </p>
@@ -352,7 +340,7 @@ export function ResourceDetail({ resource }: { resource: Resource }) {
               type="email"
               required
               placeholder="developer@company.com"
-              className="flex-grow px-3.5 py-2 rounded-xl bg-[#FAF8F5] border border-[#E8E2D8] text-xs text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-stone-500 focus:bg-white"
+              className="flex-grow px-3.5 py-2 rounded-full bg-[#FAF8F5] border border-[#E8E2D8] text-xs text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-stone-500 focus:bg-white"
             />
             <button
               type="submit"

@@ -30,3 +30,5 @@ yarn-error.log*
 # typescript build cache
 *.tsbuildinfo
 catalog_export.json
+
+vitest-report.json

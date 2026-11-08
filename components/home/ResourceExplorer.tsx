@@ -97,7 +97,7 @@ export function ResourceExplorer({ initialResources }: ResourceExplorerProps) {
       {filteredResources.length === 0 ? (
         <div className="text-center py-12 p-8 rounded-2xl bg-white border border-[#E8E2D8]">
           <p className="text-sm font-semibold text-stone-800">No resources matched your filter</p>
-          <p className="text-xs text-stone-500 mt-1">Try searching for keywords like "RAG", "Vector", "Design", or "Python".</p>
+          <p className="text-xs text-stone-500 mt-1">Try searching for keywords like "SEARCH", "DESIGN", "PYTHON", or "ALGO".</p>
           <button
             onClick={() => {
               setSelectedCategory("All");

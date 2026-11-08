@@ -5,15 +5,15 @@ import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: {
-    default: "DevResource | AI & Software Engineering Resource Hub",
+    default: "DevResource | Software Engineering & System Architecture Hub",
     template: "%s | DevResource",
   },
   description:
-    "Production-grade RAG starter kits, system design blueprints, Python automation scripts, and cheatsheets curated for technical creators and developers.",
+    "Production-grade distributed system blueprints, backend architecture templates, Python automation vaults, and cheatsheets curated for engineering creators.",
   openGraph: {
-    title: "DevResource - Production-Grade AI & Engineering Resource Hub",
+    title: "DevResource - Production Engineering & Architecture Hub",
     description:
-      "Production-grade RAG starter kits, system design blueprints, Python automation scripts, and cheatsheets curated for technical creators and developers.",
+      "Production-grade distributed system blueprints, backend architecture templates, Python automation vaults, and cheatsheets curated for engineering creators.",
     type: "website",
   },
 };
@@ -23,7 +23,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className="scroll-smooth">
       <body className="bg-[#FAF8F5] text-stone-900 min-h-screen flex flex-col font-sans antialiased selection:bg-amber-100 selection:text-amber-900">
         <Nav />
-        <main className="flex-grow w-full">{children}</main>
+        {/* Top padding ensures the photorealistic floating curved bar has clear headroom */}
+        <main className="flex-grow w-full pt-20 sm:pt-24">{children}</main>
         <Footer />
       </body>
     </html>

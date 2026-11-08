@@ -52,7 +52,7 @@ export function NewsletterForm() {
         </h2>
 
         <p className="text-xs sm:text-sm text-stone-600 max-w-lg mx-auto leading-relaxed">
-          Every Thursday, I send one deep-dive breakdown: system design architectures, open-source AI tooling, and runnable Jupyter notebooks. No promotional spam.
+          Every Thursday, I send one deep-dive breakdown: system design architectures, high-performance backend pipelines, and production engineering scripts. No promotional spam.
         </p>
 
         {submitted ? (
