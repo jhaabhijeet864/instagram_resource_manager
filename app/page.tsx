@@ -46,6 +46,13 @@ export default function HomePage() {
             Instagram Profile ↗
           </a>
           <span className="text-stone-300 hidden sm:inline">•</span>
+          <Link
+            href="/providers"
+            className="text-amber-800 hover:text-amber-900 font-semibold flex items-center"
+          >
+            <span>📁 Connect Drive / Notion ↗</span>
+          </Link>
+          <span className="text-stone-300 hidden sm:inline">•</span>
           <span className="text-emerald-700 font-semibold flex items-center">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 mr-1.5" />
             Verified Master Copies on Google Drive

@@ -3,24 +3,25 @@
 // ==============================================================================
 import { describe, it, expect } from "vitest";
 import { execFile } from "child_process";
-import path from "path";
 import { promisify } from "util";
+import { RESOURCES } from "@/lib/catalog";
 
 const run = promisify(execFile);
-const cwd = path.resolve(__dirname, "../../..");
+const cwd = process.cwd();
 
 describe("scripts/resource-manager.mjs", () => {
   it("lists the catalog resources without crashing", async () => {
     const { stdout, stderr } = await run("node", ["scripts/resource-manager.mjs", "list"], { cwd });
     expect(stderr).toBe("");
-    expect(stdout).toContain("rag-starter-kit");
-    expect(stdout).toContain("system-design-primer");
-    expect(stdout).toContain("Found 6 master resources");
+    for (const r of RESOURCES) {
+      expect(stdout).toContain(r.slug);
+    }
+    expect(stdout).toContain(`Found ${RESOURCES.length} master resources`);
   });
 
-  it("export writes a valid JSON catalog export", async () => {
+  it("export writes a valid JSON catalog export of every resource", async () => {
     const { stdout } = await run("node", ["scripts/resource-manager.mjs", "export"], { cwd });
-    expect(stdout).toContain("Exported 6 resources");
+    expect(stdout).toContain(`Exported ${RESOURCES.length} resources`);
   });
 });
 

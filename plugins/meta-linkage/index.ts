@@ -52,7 +52,7 @@ export const metaLinkagePlugin = definePlugin({
       label: "Webhook Verify Token",
       type: "password",
       required: true,
-      defaultValue: process.env.META_WEBHOOK_VERIFY_TOKEN || "creator_hub_secret_token",
+      defaultValue: process.env.META_WEBHOOK_VERIFY_TOKEN || "",
       placeholder: "Random verification string entered in Meta Webhooks dashboard",
     },
     {
@@ -81,7 +81,7 @@ export const metaLinkagePlugin = definePlugin({
   settings: {
     appId: process.env.META_APP_ID || "",
     appSecret: process.env.META_APP_SECRET || "",
-    verifyToken: process.env.META_WEBHOOK_VERIFY_TOKEN || "creator_hub_secret_token",
+    verifyToken: process.env.META_WEBHOOK_VERIFY_TOKEN || "",
     pageAccessToken: process.env.META_PAGE_ACCESS_TOKEN || "",
     instagramAccountId: process.env.INSTAGRAM_BUSINESS_ACCOUNT_ID || "",
     autoReplyComments: true,
@@ -96,11 +96,14 @@ export const metaLinkagePlugin = definePlugin({
 
       if (!context.settings.autoReplyComments) return;
 
-      // Find matched resource by keyword
-      const cleaned = event.text.trim().toUpperCase();
-      const matched = RESOURCES.find(
-        (r) => r.keyword.toUpperCase() === cleaned || cleaned.includes(r.keyword.toUpperCase())
-      );
+      // Find matched resource by whole-word keyword (sort by keyword length descending)
+      const sortedResources = [...RESOURCES].sort((a, b) => b.keyword.length - a.keyword.length);
+      const matched = sortedResources.find((r) => {
+        if (!r.keyword || !event.text) return false;
+        const escaped = r.keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const regex = new RegExp(`(?:^|[^a-zA-Z0-9])${escaped}(?:$|[^a-zA-Z0-9])`, "i");
+        return regex.test(event.text);
+      });
 
       if (matched) {
         context.log(`Keyword matched resource: ${matched.title} (/r/${matched.slug})`);

@@ -65,7 +65,9 @@ export function getStoredEvents(): AnalyticsEvent[] {
   if (typeof window === "undefined") return [];
   try {
     const data = window.localStorage.getItem(STORAGE_KEY);
-    return data ? (JSON.parse(data) as AnalyticsEvent[]) : [];
+    const parsed = data ? JSON.parse(data) : [];
+    // Guard against non-array payloads left by older versions
+    return Array.isArray(parsed) ? (parsed as AnalyticsEvent[]) : [];
   } catch {
     return [];
   }
@@ -75,7 +77,8 @@ export function getStoredEmails(): { email: string; resourceSlug: string; timest
   if (typeof window === "undefined") return [];
   try {
     const raw = window.localStorage.getItem(EMAILS_KEY);
-    return raw ? JSON.parse(raw) : [];
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed : [];
   } catch {
     return [];
   }
@@ -156,12 +159,18 @@ export function logEmailSignup(resourceSlug: string, email: string) {
 
 /** Build a Manychat-ready tracked URL for a resource. */
 export function buildTrackedUrl(slug: string, campaign: string): string {
-  const base = process.env.NEXT_PUBLIC_SITE_URL || (typeof window !== "undefined" ? window.location.origin : "");
+  // NEXT_PUBLIC_SITE_URL is preferred; NEXT_PUBLIC_APP_URL is the fallback the
+  // rest of the codebase (and .env.example) documents.
+  const base =
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    process.env.NEXT_PUBLIC_APP_URL ||
+    (typeof window !== "undefined" ? window.location.origin : "");
   return `${base}/r/${slug}?utm_source=instagram&utm_medium=comment_dm&utm_campaign=${encodeURIComponent(campaign)}`;
 }
 
-/** Clear all analytics data (local) */
+/** Clear all analytics data (local). Safe to call server-side / from SSR. */
 export function clearAnalytics() {
+  if (typeof window === "undefined") return;
   window.localStorage.removeItem(STORAGE_KEY);
   window.localStorage.removeItem(EMAILS_KEY);
 }
@@ -248,6 +257,8 @@ export function getMetrics(): Metrics {
   });
 
   events.forEach((evt) => {
+    // Defensive: malformed stored entries (null / old versions) must not crash the dashboard
+    if (!evt || typeof evt !== "object") return;
     if (evt.type === "PAGE_VISIT") totalVisits++;
     if (evt.type === "DOWNLOAD_CLICK") totalDownloads++;
     if (evt.type === "DOWNLOAD_SUCCESS") totalServed++;

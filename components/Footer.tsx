@@ -32,6 +32,11 @@ export function Footer() {
               </Link>
             </li>
             <li>
+              <Link href="/providers" className="hover:text-stone-900 transition-colors text-amber-800 font-medium">
+                Connect Providers (Drive / Notion) ↗
+              </Link>
+            </li>
+            <li>
               <Link href="/dashboard" className="hover:text-stone-900 transition-colors">
                 Campaign Analytics
               </Link>

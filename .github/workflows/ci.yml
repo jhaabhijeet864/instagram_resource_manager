@@ -18,36 +18,16 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '20'
+        cache: 'npm'
 
-    - name: Run App & Config Assertions
-      run: |
-        node -e "
-        global.window = global;
-        global.window.location = { search: '' };
-        global.localStorage = {
-          _data: {},
-          getItem(k) { return this._data[k] || null; },
-          setItem(k, v) { this._data[k] = String(v); },
-          removeItem(k) { delete this._data[k]; }
-        };
-        global.document = { referrer: '' };
-        require('./js/config.js');
-        require('./js/analytics.js');
+    - name: Install dependencies
+      run: npm ci
 
-        function assert(cond, msg) { if(!cond) throw new Error(msg); }
-        function assertEqual(a, b, msg) { if(a !== b) throw new Error(msg || (a + ' !== ' + b)); }
+    - name: Typecheck
+      run: npm run typecheck
 
-        assert(typeof window.CREATOR_CONFIG === 'object');
-        assert(window.CREATOR_CONFIG.resources.length >= 6);
-        assert(window.CREATOR_CONFIG.categories.includes('AI'));
-        assert(window.CREATOR_CONFIG.categories.includes('System Design'));
+    - name: Backend test suite (Vitest)
+      run: npm test
 
-        window.CreatorAnalytics.clearAnalytics();
-        window.CreatorAnalytics.logVisit('rag-starter-kit');
-        window.CreatorAnalytics.logDownload('rag-starter-kit');
-        const metrics = window.CreatorAnalytics.getMetrics();
-        assertEqual(metrics.totalVisits, 1);
-        assertEqual(metrics.totalDownloads, 1);
-        console.log('✅ All CI assertions passed successfully!');
-        "
-
+    - name: Plugin static checks
+      run: node scripts/plugins-runner.mjs test

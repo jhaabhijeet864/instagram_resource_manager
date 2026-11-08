@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { RESOURCES, Resource } from "@/lib/catalog";
+import { isSafePublicHttpUrl } from "@/lib/server/url-guard";
 
 /**
  * In-memory copy of catalog with live mutations for this runtime.
@@ -20,10 +21,22 @@ export async function GET() {
  * Body: { action: "create" | "validateLink", resource?: Resource, url?: string }
  */
 export async function POST(request: Request) {
+  let body: any;
   try {
-    const body = await request.json();
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+  }
 
+  try {
     if (body.action === "validateLink" && body.url) {
+      // SSRF guard: only public http(s) URLs may be fetched server-side.
+      if (!isSafePublicHttpUrl(body.url)) {
+        return NextResponse.json(
+          { ok: false, error: "URL blocked: must be a public http(s) URL" },
+          { status: 400 }
+        );
+      }
       try {
         const res = await fetch(body.url, { method: "HEAD", redirect: "follow" });
         return NextResponse.json({
@@ -40,6 +53,21 @@ export async function POST(request: Request) {
       const newRes = body.resource as Resource;
       if (!newRes.slug || !newRes.title || !newRes.storageUrl) {
         return NextResponse.json({ error: "slug, title, and storageUrl are required" }, { status: 400 });
+      }
+      // Slug must be URL-safe so /r/<slug> links and lookups never break.
+      if (!/^[a-z0-9-]+$/.test(newRes.slug)) {
+        return NextResponse.json(
+          { error: "slug must be lowercase alphanumeric with dashes (use slugify())" },
+          { status: 400 }
+        );
+      }
+      // Storage URL must be a public http(s) URL (also blocks private/SSRF URLs
+      // from being installed into the catalog and later redirected to).
+      if (!isSafePublicHttpUrl(newRes.storageUrl)) {
+        return NextResponse.json(
+          { error: "storageUrl must be a public http(s) URL" },
+          { status: 400 }
+        );
       }
 
       // Check duplicate slug

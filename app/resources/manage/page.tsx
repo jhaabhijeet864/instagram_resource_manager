@@ -149,12 +149,21 @@ export default function ResourceManagerPage() {
           </p>
         </div>
 
-        <button
-          onClick={() => setModalOpen(true)}
-          className="btn-primary text-xs px-4 py-2 self-start md:self-auto"
-        >
-          + Add New Resource
-        </button>
+        <div className="flex items-center gap-2 self-start md:self-auto">
+          <Link
+            href="/providers"
+            className="btn-secondary text-xs px-3.5 py-2 inline-flex items-center space-x-1.5"
+          >
+            <span>📁 Connect Drive / Notion</span>
+            <span>↗</span>
+          </Link>
+          <button
+            onClick={() => setModalOpen(true)}
+            className="btn-primary text-xs px-4 py-2"
+          >
+            + Add New Resource
+          </button>
+        </div>
       </div>
 
       {/* Filter and Search Bar */}

@@ -13,15 +13,16 @@ export function Nav() {
   const pathname = usePathname() || "/";
 
   const navLinks = [
-    { href: "/", label: "Resource Library", active: pathname === "/" },
+    { href: "/", label: "Library", active: pathname === "/" },
     { href: "/dashboard", label: "Analytics", active: pathname.startsWith("/dashboard") },
-    { href: "/resources/manage", label: "Resource Manager", active: pathname.startsWith("/resources/manage") },
-    { href: "/plugins", label: "Plugins & Linkage", active: pathname.startsWith("/plugins") },
+    { href: "/resources/manage", label: "Manager", active: pathname.startsWith("/resources/manage") },
+    { href: "/providers", label: "Connect Providers", active: pathname.startsWith("/providers") },
+    { href: "/plugins", label: "Plugins", active: pathname.startsWith("/plugins") },
   ];
 
   return (
     <div className="fixed top-3 sm:top-4 inset-x-0 z-50 px-3 sm:px-6 pointer-events-none flex justify-center">
-      <header className="pointer-events-auto max-w-4xl w-full photoreal-floating-bar rounded-full px-3 sm:px-4 py-1.5 sm:py-2 flex items-center justify-between transition-all">
+      <header className="pointer-events-auto max-w-5xl w-full photoreal-floating-bar rounded-full px-3 sm:px-4 py-1.5 sm:py-2 flex items-center justify-between transition-all">
         {/* Brand Lens & Identity */}
         <Link href="/" className="flex items-center space-x-2.5 group pl-1">
           {/* Photorealistic tactile camera lens/aperture icon */}

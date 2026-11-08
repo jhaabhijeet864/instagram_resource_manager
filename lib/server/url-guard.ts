@@ -1,65 +1,63 @@
 // ==============================================================================
-// SSRF PROTECTION FOR SERVER-SIDE HTTP REDIRECTS & WEBHOOKS
-// Validates that a target URL is an acceptable public http(s) destination.
+// SERVER-SIDE URL SAFETY GUARD
+// Protects server-side outbound fetches (e.g. /api/resources validateLink)
+// from SSRF: internal networks, cloud metadata endpoints, and non-HTTP schemes.
 // ==============================================================================
 
-export function isSafePublicHttpUrl(input: string): boolean {
-  if (!input || typeof input !== "string") return false;
-  let parsed: URL;
+const PRIVATE_HOSTNAME_SUFFIXES = [".localhost", ".local", ".internal"];
+
+function isPrivateIPv4(host: string): boolean {
+  if (!/^\d{1,3}(\.\d{1,3}){3}$/.test(host)) return false;
+  const parts = host.split(".").map(Number);
+  if (parts.some((p) => p > 255)) return true; // malformed IPv4 => treat as unsafe
+  const [a, b] = parts;
+  if (a === 0 || a === 10 || a === 127) return true; // this-network, private, loopback
+  if (a === 169 && b === 254) return true; // link-local (cloud metadata e.g. 169.254.169.254)
+  if (a === 192 && b === 168) return true; // private
+  if (a === 172 && b >= 16 && b <= 31) return true; // private
+  return false;
+}
+
+function isPrivateIPv6(host: string): boolean {
+  const clean = host.replace(/^\[|\]$/g, "").toLowerCase();
+  if (!clean.includes(":")) return false;
+  if (clean === "::1" || clean === "::") return true; // loopback / unspecified
+  if (clean.startsWith("fe80") || clean.startsWith("fc") || clean.startsWith("fd")) return true; // link-local / ULA
+  if (clean.startsWith("::ffff:")) {
+    // IPv4-mapped IPv6 — evaluate the mapped IPv4 part
+    return isPrivateIPv4(clean.slice("::ffff:".length));
+  }
+  return false;
+}
+
+/**
+ * Returns true only for public absolute HTTP(S) URLs that are safe for
+ * server-side fetching. Blocks localhost, private ranges, link-local/metadata
+ * endpoints (169.254.169.254, metadata.google.internal), and non-http(s)
+ * schemes (file:, ftp:, javascript:, ...).
+ */
+export function isSafePublicHttpUrl(raw: string): boolean {
+  if (!raw || typeof raw !== "string") return false;
+  let url: URL;
   try {
-    parsed = new URL(input);
+    url = new URL(raw);
   } catch {
     return false;
   }
+  if (url.protocol !== "http:" && url.protocol !== "https:") return false;
 
-  // Protocol check
-  if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
-    return false;
-  }
+  const rawHost = url.hostname.toLowerCase();
+  if (!rawHost) return false;
+  const host = rawHost.replace(/^\[|\]$/g, "");
 
-  const host = parsed.hostname.toLowerCase();
+  // Literal IPv6 addresses
+  if (host.includes(":") && isPrivateIPv6(host)) return false;
 
-  // Localhost checks
-  if (
-    host === "localhost" ||
-    host.endsWith(".localhost") ||
-    host.endsWith(".local") ||
-    host === "0.0.0.0"
-  ) {
-    return false;
-  }
+  // Local/internal hostnames
+  if (host === "localhost" || PRIVATE_HOSTNAME_SUFFIXES.some((s) => host.endsWith(s))) return false;
 
-  // Cloud metadata endpoints
-  if (
-    host === "169.254.169.254" ||
-    host.includes("metadata.google.internal") ||
-    host.includes("169.254.")
-  ) {
-    return false;
-  }
-
-  // IPv4 checks
-  const ipv4Match = host.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/);
-  if (ipv4Match) {
-    const oct1 = parseInt(ipv4Match[1], 10);
-    const oct2 = parseInt(ipv4Match[2], 10);
-    const oct3 = parseInt(ipv4Match[3], 10);
-    const oct4 = parseInt(ipv4Match[4], 10);
-
-    if (oct1 > 255 || oct2 > 255 || oct3 > 255 || oct4 > 255) return false;
-
-    // Loopback: 127.0.0.0/8
-    if (oct1 === 127 || oct1 === 0) return false;
-
-    // Private Range A: 10.0.0.0/8
-    if (oct1 === 10) return false;
-
-    // Private Range B: 172.16.0.0 - 172.31.255.255
-    if (oct1 === 172 && oct2 >= 16 && oct2 <= 31) return false;
-
-    // Private Range C: 192.168.0.0/16
-    if (oct1 === 192 && oct2 === 168) return false;
-  }
+  // Dotted-quad IPv4
+  if (isPrivateIPv4(host)) return false;
 
   return true;
 }

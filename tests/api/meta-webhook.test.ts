@@ -7,6 +7,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { pluginRegistry } from "@/lib/plugins/registry";
 import { GET, POST } from "@/app/api/plugins/meta/webhook/route";
 import { verifyMetaSignature } from "@/plugins/meta-linkage";
+import { RESOURCES } from "@/lib/catalog";
 
 const APP_SECRET = "test_webhook_secret";
 const VERIFY_TOKEN = "my_verify_token";
@@ -158,15 +159,18 @@ describe("POST /api/plugins/meta/webhook (event receiver)", () => {
 
   it("matches the right resource by keyword (whole-word)", async () => {
     pluginRegistry.updatePluginSettings("meta-linkage", { appSecret: "" });
-    await post(instagramPayload("please send PROMPT"), null);
+    const target = RESOURCES[0];
+    await post(instagramPayload(`please send ${target.keyword}`), null);
     expect(dispatchSpy).toHaveBeenCalledWith(
-      expect.objectContaining({ matchedResource: expect.objectContaining({ slug: "viral-creator-prompts" }) })
+      expect.objectContaining({ matchedResource: expect.objectContaining({ slug: target.slug }) })
     );
   });
 
-  it("does NOT match substring false positives like PROMOTIONAL / DESIGNER", async () => {
+  it("does NOT match substring false positives", async () => {
     pluginRegistry.updatePluginSettings("meta-linkage", { appSecret: "" });
-    await post(instagramPayload("PROMOTIONAL giveaway for a DESIGNER"), null);
+    const target = RESOURCES[0];
+    // extended words (e.g. "SEARCHED"/"BLENDERPRO") must not match the bare keyword
+    await post(instagramPayload(`${target.keyword.toUpperCase()}ED ${target.keyword.toUpperCase()}PRO`), null);
     expect(dispatchSpy).toHaveBeenCalledWith(
       expect.objectContaining({ matchedResource: null })
     );

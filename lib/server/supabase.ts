@@ -1,32 +1,37 @@
 // ==============================================================================
 // SERVER-SIDE SUPABASE SYNC HELPERS (API routes only!)
-// Reads SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY from server environment.
+// Reads SUPABASE_URL / NEXT_PUBLIC_SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY from server environment.
 // These credentials are NEVER shipped to the browser.
 // If not configured, all endpoints no-op gracefully => local tracking keeps
 // working with zero configuration.
 // ==============================================================================
 
-import { NextResponse } from "next/server";
 import type { AnalyticsEvent } from "@/lib/analytics";
 
-const SUPABASE_URL = process.env.SUPABASE_URL || "";
-const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+function getSupabaseUrl(): string {
+  return process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+}
+
+function getServiceKey(): string {
+  return process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+}
 
 export function isSupabaseConfigured(): boolean {
-  return Boolean(SUPABASE_URL && SERVICE_KEY);
+  return Boolean(getSupabaseUrl() && getServiceKey());
 }
 
 function restHeaders(): HeadersInit {
+  const key = getServiceKey();
   return {
     "Content-Type": "application/json",
-    apikey: SERVICE_KEY,
-    Authorization: `Bearer ${SERVICE_KEY}`,
+    apikey: key,
+    Authorization: `Bearer ${key}`,
     Prefer: "return=minimal",
   };
 }
 
 function restUrl(path: string): string {
-  return `${SUPABASE_URL.replace(/\/$/, "")}/rest/v1/${path}`;
+  return `${getSupabaseUrl().replace(/\/$/, "")}/rest/v1/${path}`;
 }
 
 /** Insert one analytics event into the `analytics_events` table. */
@@ -49,26 +54,25 @@ export async function insertAnalyticsEvent(event: AnalyticsEvent): Promise<boole
     });
     return res.ok;
   } catch {
-    return false; // never break the visitor experience over analytics
+    return false;
   }
 }
 
-/** Insert one newsletter email into the `email_signups` table. */
-export async function insertEmailSignup(email: string, resourceSlug: string): Promise<boolean> {
+/** Insert one newsletter / notification signup into `email_signups`. */
+export async function insertEmailSignup(email: string, resourceSlug = ""): Promise<boolean> {
   if (!isSupabaseConfigured()) return false;
   try {
     const res = await fetch(restUrl("email_signups"), {
       method: "POST",
       headers: restHeaders(),
-      body: JSON.stringify({ email, resource_slug: resourceSlug }),
+      body: JSON.stringify({
+        email,
+        resource_slug: resourceSlug || "general",
+      }),
       cache: "no-store",
     });
     return res.ok;
   } catch {
     return false;
   }
-}
-
-export function jsonOk(data: Record<string, unknown> = { ok: true }) {
-  return NextResponse.json(data);
 }

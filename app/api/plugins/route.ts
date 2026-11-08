@@ -36,8 +36,14 @@ export async function GET() {
  * Body: { id: string, action: "toggle" | "updateSettings", enabled?: boolean, settings?: Record<string, any> }
  */
 export async function POST(request: Request) {
+  let body: any;
   try {
-    const body = await request.json();
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+  }
+
+  try {
     const { id, action, enabled, settings } = body;
 
     if (!id) {

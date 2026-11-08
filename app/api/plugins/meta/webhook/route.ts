@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { pluginRegistry } from "@/lib/plugins/registry";
 import { verifyMetaSignature } from "@/plugins/meta-linkage";
-import { RESOURCES } from "@/lib/catalog";
+import { findResourceByKeyword } from "@/lib/catalog";
 
 /**
  * GET /api/plugins/meta/webhook
@@ -14,10 +14,10 @@ export async function GET(request: Request) {
   const challenge = searchParams.get("hub.challenge");
 
   const metaPlugin = pluginRegistry.getPlugin("meta-linkage");
+  // Fail closed: when no token is configured at all, verification must fail
+  // (never fall back to a publicly hard-coded token).
   const expectedVerifyToken =
-    metaPlugin?.settings?.verifyToken ||
-    process.env.META_WEBHOOK_VERIFY_TOKEN ||
-    "creator_hub_secret_token";
+    metaPlugin?.settings?.verifyToken || process.env.META_WEBHOOK_VERIFY_TOKEN || "";
 
   if (mode === "subscribe" && token === expectedVerifyToken) {
     console.log("[Meta Webhook] Verification challenge passed successfully.");
@@ -47,6 +47,10 @@ export async function POST(request: Request) {
 
   try {
     const data = JSON.parse(rawBody);
+    if (data === null || typeof data !== "object" || Array.isArray(data)) {
+      // Not a Meta webhook payload shape at all.
+      return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
+    }
 
     if (data.object === "instagram" && Array.isArray(data.entry)) {
       for (const entry of data.entry) {
@@ -60,11 +64,8 @@ export async function POST(request: Request) {
               const userId = val.from?.id || "";
               const username = val.from?.username || "";
 
-              // Find matched resource
-              const cleaned = text.trim().toUpperCase();
-              const matchedResource = RESOURCES.find(
-                (r) => r.keyword.toUpperCase() === cleaned || cleaned.includes(r.keyword.toUpperCase())
-              );
+              // Whole-word keyword matching (avoids e.g. "SEARCHED" → "SEARCH")
+              const matchedResource = findResourceByKeyword(text);
 
               // Dispatch to plugin hook
               await pluginRegistry.dispatchCommentReceived({
@@ -85,6 +86,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ status: "EVENT_RECEIVED" });
   } catch (err: any) {
     console.error("[Meta Webhook] Error processing event:", err);
-    return NextResponse.json({ error: "Internal processing error" }, { status: 500 });
+    // Malformed JSON must be 400 so Meta does not retry forever on 500s.
+    return NextResponse.json({ error: "Internal processing error" }, { status: 400 });
   }
 }

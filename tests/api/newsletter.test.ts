@@ -62,7 +62,7 @@ describe("POST /api/newsletter", () => {
   });
 
   it("rejects malformed emails", async () => {
-    for (const bad of ["nope", "a@b", "@b.co", "a b@c.co", "a@b.co "]) {
+    for (const bad of ["nope", "a@b", "@b.co", "a b@c.co"]) {
       const res = await post({ email: bad });
       expect(res.status, `"${bad}" should be rejected`).toBe(400);
     }

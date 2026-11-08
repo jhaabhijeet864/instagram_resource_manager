@@ -4,6 +4,7 @@
 // ==============================================================================
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import * as analytics from "@/lib/analytics";
+import { BENCHMARK_CAMPAIGNS } from "@/lib/catalog";
 
 type Store = Record<string, string>;
 let store: Store;
@@ -147,19 +148,25 @@ describe("getMetrics aggregation", () => {
     const m = analytics.getMetrics();
     expect(m.totalVisits).toBe(0);
     expect(m.deliveryRate).toBe(100); // no downloads => nothing undelivered
-    expect(m.campaigns.length).toBeGreaterThanOrEqual(5);
-    expect(m.campaigns.filter((c) => c.isBenchmark).length).toBe(5);
-    const ig1 = m.campaigns.find((c) => c.campaign_id === "IG-001");
-    expect(ig1?.dm_sent).toBe(250);
+    // every benchmark campaign is present and flagged as benchmark
+    const benchIds = BENCHMARK_CAMPAIGNS.map((c) => c.campaign_id);
+    const seeded = m.campaigns.filter((c) => c.isBenchmark).map((c) => c.campaign_id);
+    expect([...new Set(benchIds)]).toEqual(benchIds); // benchmark ids unique in data
+    expect(new Set(seeded)).toEqual(new Set(benchIds));
+    const bench = BENCHMARK_CAMPAIGNS[0];
+    const ig = m.campaigns.find((c) => c.campaign_id === bench.campaign_id);
+    expect(ig?.dm_sent).toBe(bench.dm_sent);
+    expect(ig?.page_visits).toBe(bench.page_visits);
   });
 
   it("counts event types and computes conversion/delivery rates", () => {
+    const bench = BENCHMARK_CAMPAIGNS[0];
     const events = [
-      factoryEvent({ id: "1", type: "PAGE_VISIT", resourceSlug: "rag-starter-kit", campaign: "IG-001" }),
-      factoryEvent({ id: "2", type: "PAGE_VISIT", resourceSlug: "rag-starter-kit", campaign: "IG-001" }),
-      factoryEvent({ id: "3", type: "DOWNLOAD_CLICK", resourceSlug: "rag-starter-kit", campaign: "IG-001" }),
-      factoryEvent({ id: "4", type: "DOWNLOAD_SUCCESS", resourceSlug: "rag-starter-kit", campaign: "IG-001" }),
-      factoryEvent({ id: "5", type: "EMAIL_SIGNUP", resourceSlug: "rag-starter-kit", campaign: "IG-001" }),
+      factoryEvent({ id: "1", type: "PAGE_VISIT", resourceSlug: "rag-starter-kit", campaign: bench.campaign_id }),
+      factoryEvent({ id: "2", type: "PAGE_VISIT", resourceSlug: "rag-starter-kit", campaign: bench.campaign_id }),
+      factoryEvent({ id: "3", type: "DOWNLOAD_CLICK", resourceSlug: "rag-starter-kit", campaign: bench.campaign_id }),
+      factoryEvent({ id: "4", type: "DOWNLOAD_SUCCESS", resourceSlug: "rag-starter-kit", campaign: bench.campaign_id }),
+      factoryEvent({ id: "5", type: "EMAIL_SIGNUP", resourceSlug: "rag-starter-kit", campaign: bench.campaign_id }),
     ];
     store["creator_hub_analytics_events"] = JSON.stringify(events);
     const m = analytics.getMetrics();
@@ -175,9 +182,9 @@ describe("getMetrics aggregation", () => {
     expect(rag).toEqual({ slug: "rag-starter-kit", visits: 2, downloads: 1, served: 1, signups: 1 });
 
     // Live events land in the matching benchmark campaign buckets
-    const ig1 = m.campaigns.find((c) => c.campaign_id === "IG-001");
-    expect(ig1?.page_visits).toBe(145 + 2); // 145 benchmark + 2 live
-    expect(ig1?.successful_downloads).toBe(103 + 1);
+    const ig = m.campaigns.find((c) => c.campaign_id === bench.campaign_id);
+    expect(ig?.page_visits).toBe(bench.page_visits + 2);
+    expect(ig?.successful_downloads).toBe(bench.successful_downloads + 1);
   });
 
   it("creates live campaign buckets for unknown campaigns", () => {
@@ -192,7 +199,12 @@ describe("getMetrics aggregation", () => {
     expect(bucket?.isBenchmark).toBe(false);
     expect(bucket?.page_visits).toBe(1);
     expect(bucket?.successful_downloads).toBe(1);
-    expect(m.aggregate.visits).toBe(1);
+    // aggregate live visits (1) + every benchmark's page visits
+    const benchVisits = BENCHMARK_CAMPAIGNS.reduce(
+      (sum, c) => sum + (c.page_visits || 0),
+      0
+    );
+    expect(m.aggregate.visits).toBe(1 + benchVisits);
   });
 
   it("tolerates malformed event objects (defensive aggregation)", () => {

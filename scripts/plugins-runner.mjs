@@ -44,16 +44,29 @@ if (command === "list") {
   );
   console.log("\nTo test plugin integrations: node scripts/plugins-runner.mjs test");
 } else if (command === "test") {
-  console.log("Testing plugin hooks and webhook signatures...\n");
+  console.log("Static plugin checks (full runtime coverage: npm test)\n");
+  let failures = 0;
   for (const p of plugins) {
     process.stdout.write(`• Checking ${p.id} ... `);
-    if (p.exists) {
-      console.log("✓ Manifest & hooks verified");
-    } else {
-      console.log("✗ Missing index.ts");
+    if (!p.exists) {
+      console.log("FAIL: Missing index.ts");
+      failures++;
+      continue;
     }
+    const source = fs.readFileSync(p.path, "utf-8");
+    if (!source.includes("definePlugin(")) {
+      console.log("FAIL: index.ts does not declare a plugin via definePlugin()");
+      failures++;
+      continue;
+    }
+    console.log("OK: Entrypoint declared via definePlugin()");
   }
-  console.log("\nAll plugin health checks passed!");
+  console.log(
+    failures > 0
+      ? `\n${failures} plugin check(s) failed!`
+      : "\nAll static plugin checks passed! (run `npm test` for full plugin test coverage)"
+  );
+  if (failures > 0) process.exit(1);
 } else {
   console.log("Usage: node scripts/plugins-runner.mjs [list|test]");
 }
