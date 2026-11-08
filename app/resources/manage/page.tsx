@@ -301,7 +301,7 @@ export default function ResourceManagerPage() {
                     type="text"
                     value={formData.slug}
                     onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                    placeholder="e.g. content-calendar-2026"
+                    placeholder="e.g. system-design-cheatsheet"
                     className="w-full p-2 rounded-lg border border-[#E8E2D8] bg-[#FAF8F5] font-mono text-xs"
                     required
                   />
@@ -314,7 +314,7 @@ export default function ResourceManagerPage() {
                   type="text"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  placeholder="e.g. The 90-Day Content Calendar Planner"
+                  placeholder="e.g. System Design Cheatsheet: Scaling to 10M Users"
                   className="w-full p-2 rounded-lg border border-[#E8E2D8] bg-[#FAF8F5] text-xs"
                   required
                 />
@@ -365,7 +365,7 @@ export default function ResourceManagerPage() {
                     type="text"
                     value={formData.fileName}
                     onChange={(e) => setFormData({ ...formData, fileName: e.target.value })}
-                    placeholder="System_Calendar_v1.pdf"
+                    placeholder="System_Design_v1.pdf"
                     className="w-full p-2 rounded-lg border border-[#E8E2D8] bg-[#FAF8F5] text-xs"
                   />
                 </div>
