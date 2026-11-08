@@ -20,6 +20,8 @@ COPY . .
 # Set environment for standalone build
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
+# Enable standalone output in next.config.mjs (required by the runner stage)
+ENV DOCKER_BUILD=1
 
 RUN npm run build
 

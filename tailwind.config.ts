@@ -34,9 +34,18 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ["var(--font-sans)", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif"],
+        // Instagram's exact web font stack (font-family used by instagram.com)
+        sans: [
+          "-apple-system",
+          "BlinkMacSystemFont",
+          "Segoe UI",
+          "Roboto",
+          "Helvetica",
+          "Arial",
+          "sans-serif",
+        ],
         serif: ["Georgia", "Cambria", "Times New Roman", "serif"],
-        mono: ["var(--font-mono)", "ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "monospace"],
+        mono: ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "monospace"],
       },
       boxShadow: {
         warm: "0 2px 12px -2px rgba(44, 38, 34, 0.06), 0 1px 3px rgba(44, 38, 34, 0.04)",

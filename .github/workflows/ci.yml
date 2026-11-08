@@ -1,0 +1,52 @@
+name: CI Test Suite
+
+on:
+  push:
+    branches: [ instagram, main ]
+  pull_request:
+    branches: [ instagram, main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Run App & Config Assertions
+      run: |
+        node -e "
+        global.window = global;
+        global.window.location = { search: '' };
+        global.localStorage = {
+          _data: {},
+          getItem(k) { return this._data[k] || null; },
+          setItem(k, v) { this._data[k] = String(v); },
+          removeItem(k) { delete this._data[k]; }
+        };
+        global.document = { referrer: '' };
+        require('./js/config.js');
+        require('./js/analytics.js');
+
+        function assert(cond, msg) { if(!cond) throw new Error(msg); }
+        function assertEqual(a, b, msg) { if(a !== b) throw new Error(msg || (a + ' !== ' + b)); }
+
+        assert(typeof window.CREATOR_CONFIG === 'object');
+        assert(window.CREATOR_CONFIG.resources.length >= 6);
+        assert(window.CREATOR_CONFIG.categories.includes('AI'));
+        assert(window.CREATOR_CONFIG.categories.includes('System Design'));
+
+        window.CreatorAnalytics.clearAnalytics();
+        window.CreatorAnalytics.logVisit('rag-starter-kit');
+        window.CreatorAnalytics.logDownload('rag-starter-kit');
+        const metrics = window.CreatorAnalytics.getMetrics();
+        assertEqual(metrics.totalVisits, 1);
+        assertEqual(metrics.totalDownloads, 1);
+        console.log('✅ All CI assertions passed successfully!');
+        "

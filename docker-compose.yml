@@ -12,6 +12,9 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3000
+      - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
+      - SUPABASE_URL=${SUPABASE_URL:-}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY:-}
       - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL:-http://localhost:3000}
       - NEXT_PUBLIC_CREATOR_HANDLE=${NEXT_PUBLIC_CREATOR_HANDLE:-creator_handle}
       - NEXT_PUBLIC_CREATOR_NAME=${NEXT_PUBLIC_CREATOR_NAME:-Creator Hub}
