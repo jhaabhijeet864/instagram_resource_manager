@@ -1,0 +1,143 @@
+/* ==============================================================================
+   DEVRESOURCE DESIGN SYSTEM: Creamy Warm Paper & Editorial Typography
+   Strict Anti-Slop Directive: Clean ivory, warm stone, charcoal, and warm amber.
+   ============================================================================== */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-creamy: #FAF8F5;
+  --bg-card: #FFFFFF;
+  --bg-surface: #F5F1EB;
+  --border-subtle: #E8E2D8;
+  --text-primary: #1C1917;
+  --text-secondary: #57534E;
+  --text-muted: #78716C;
+  --accent-warm: #B45309;
+}
+
+body {
+  background-color: var(--bg-creamy);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Editorial paper surface panels */
+.creamy-card {
+  background: #FFFFFF;
+  border: 1px solid #E8E2D8;
+  box-shadow: 0 2px 8px -2px rgba(44, 38, 34, 0.05), 0 1px 3px rgba(44, 38, 34, 0.03);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.creamy-card:hover {
+  border-color: #D6CDBD;
+  box-shadow: 0 8px 24px -4px rgba(44, 38, 34, 0.09), 0 2px 6px rgba(44, 38, 34, 0.04);
+}
+
+.creamy-card-subtle {
+  background: #FDFBF7;
+  border: 1px solid #EFE9DF;
+}
+
+/* Editorial badges */
+.creamy-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  padding: 0.2rem 0.55rem;
+  border-radius: 9999px;
+  background-color: #F4EFEA;
+  color: #78716C;
+  border: 1px solid #E4DCD0;
+}
+
+.creamy-badge-accent {
+  background-color: #FEF3C7;
+  color: #92400E;
+  border: 1px solid #FDE68A;
+}
+
+.creamy-badge-success {
+  background-color: #ECFDF5;
+  color: #065F46;
+  border: 1px solid #A7F3D0;
+}
+
+/* Editorial Buttons */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.65rem;
+  background-color: #1C1917;
+  color: #FAF8F5;
+  border: 1px solid #1C1917;
+  transition: all 0.15s ease;
+}
+
+.btn-primary:hover {
+  background-color: #292524;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(28, 25, 23, 0.15);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.65rem;
+  background-color: #FFFFFF;
+  color: #292524;
+  border: 1px solid #E2D9CC;
+  transition: all 0.15s ease;
+}
+
+.btn-secondary:hover {
+  background-color: #FAF7F2;
+  border-color: #D0C5B5;
+}
+
+/* Code Snippet block with creamy container */
+.code-container {
+  background-color: #18181B;
+  color: #F4F4F5;
+  border-radius: 0.75rem;
+  border: 1px solid #27272A;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* Prompt Box */
+.prompt-box {
+  background-color: #FAF7F2;
+  border: 1px solid #E8E2D8;
+  border-left: 3px solid #B45309;
+}
+
+/* Clean scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #FAF8F5;
+}
+::-webkit-scrollbar-thumb {
+  background: #D8D1C5;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #BAAF9F;
+}
