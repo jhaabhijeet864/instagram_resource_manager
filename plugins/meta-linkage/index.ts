@@ -22,7 +22,7 @@ export const metaLinkagePlugin = definePlugin({
   id: "meta-linkage",
   name: "Meta & Instagram Account Linkage",
   version: "1.2.0",
-  author: "Official Resource Manager Core",
+  author: "Official DevResource Core",
   category: "social",
   description:
     "Direct integration with Meta Graph API for Instagram Business accounts. Automates comment-to-DM triggers and validates real-time webhooks.",

@@ -104,7 +104,7 @@ describe("pluginRegistry", () => {
     );
     // real plugins: none define onDownloadIntent except webhook-dispatcher
     await pluginRegistry.dispatchDownloadIntent({
-      slug: "rag-starter-kit",
+      slug: "any-resource-slug",
       resource: {} as any,
       utm: { campaign: "t", source: "s", medium: "m" },
       timestamp: new Date().toISOString(),
@@ -128,7 +128,7 @@ describe("pluginRegistry", () => {
       })
     );
     await pluginRegistry.dispatchDownloadIntent({
-      slug: "rag-starter-kit",
+      slug: "any-resource-slug",
       resource: {} as any,
       utm: { campaign: "t", source: "s", medium: "m" },
       timestamp: new Date().toISOString(),

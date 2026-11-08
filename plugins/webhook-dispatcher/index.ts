@@ -11,7 +11,7 @@ export const webhookDispatcherPlugin = definePlugin({
   id: "webhook-dispatcher",
   name: "Outbound Webhook Dispatcher",
   version: "1.0.0",
-  author: "Official Resource Manager Core",
+  author: "Official DevResource Core",
   category: "notification",
   description:
     "Dispatches real-time webhooks on download intent or newsletter capture to Zapier, Make.com, Discord, Slack, or custom CRMs.",

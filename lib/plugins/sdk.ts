@@ -1,5 +1,5 @@
 // ==============================================================================
-// PLUGIN SDK: Helpers for authoring 3rd-party Resource Manager plugins
+// PLUGIN SDK: Helpers for authoring 3rd-party DevResource plugins
 // ==============================================================================
 
 import type { PluginDefinition } from "./types";
