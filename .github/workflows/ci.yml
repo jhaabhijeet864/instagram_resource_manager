@@ -50,3 +50,4 @@ jobs:
         assertEqual(metrics.totalDownloads, 1);
         console.log('✅ All CI assertions passed successfully!');
         "
+

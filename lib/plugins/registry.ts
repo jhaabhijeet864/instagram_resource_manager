@@ -65,7 +65,8 @@ class PluginRegistry {
   }
 
   public async dispatchResourceVisit(event: ResourceVisitEvent): Promise<void> {
-    for (const plugin of this.plugins.values()) {
+    const activePlugins = Array.from(this.plugins.values());
+    for (const plugin of activePlugins) {
       if (plugin.enabled && plugin.hooks.onResourceVisit) {
         try {
           await plugin.hooks.onResourceVisit(event, this.createContext(plugin));
@@ -77,7 +78,8 @@ class PluginRegistry {
   }
 
   public async dispatchDownloadIntent(event: DownloadIntentEvent): Promise<void> {
-    for (const plugin of this.plugins.values()) {
+    const activePlugins = Array.from(this.plugins.values());
+    for (const plugin of activePlugins) {
       if (plugin.enabled && plugin.hooks.onDownloadIntent) {
         try {
           await plugin.hooks.onDownloadIntent(event, this.createContext(plugin));
@@ -89,7 +91,8 @@ class PluginRegistry {
   }
 
   public async dispatchFileServed(event: FileServedEvent): Promise<void> {
-    for (const plugin of this.plugins.values()) {
+    const activePlugins = Array.from(this.plugins.values());
+    for (const plugin of activePlugins) {
       if (plugin.enabled && plugin.hooks.onFileServed) {
         try {
           await plugin.hooks.onFileServed(event, this.createContext(plugin));
@@ -101,7 +104,8 @@ class PluginRegistry {
   }
 
   public async dispatchLeadCaptured(event: LeadCapturedEvent): Promise<void> {
-    for (const plugin of this.plugins.values()) {
+    const activePlugins = Array.from(this.plugins.values());
+    for (const plugin of activePlugins) {
       if (plugin.enabled && plugin.hooks.onLeadCaptured) {
         try {
           await plugin.hooks.onLeadCaptured(event, this.createContext(plugin));
@@ -113,7 +117,8 @@ class PluginRegistry {
   }
 
   public async dispatchCommentReceived(event: MetaCommentEvent): Promise<void> {
-    for (const plugin of this.plugins.values()) {
+    const activePlugins = Array.from(this.plugins.values());
+    for (const plugin of activePlugins) {
       if (plugin.enabled && plugin.hooks.onCommentReceived) {
         try {
           await plugin.hooks.onCommentReceived(event, this.createContext(plugin));

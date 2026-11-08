@@ -26,3 +26,7 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# typescript build cache
+*.tsbuildinfo
+catalog_export.json

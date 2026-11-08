@@ -1,0 +1,55 @@
+# GitHub automatically generated release notes configuration.
+# Used when you click "Generate release notes" on a new release, or when
+# a release is created automatically (e.g. by your CI or automation).
+# Docs: https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes
+
+changelog:
+  exclude:
+    # Ignore PRs that don't belong in user-facing release notes
+    labels:
+      - ignore-for-release
+      - dependencies
+      - ci
+  categories:
+    - title: New Features
+      labels:
+        - feat
+        - feature
+        - enhancement
+    - title: Bug Fixes
+      labels:
+        - fix
+        - bugfix
+        - bug
+    - title: Performance & SEO
+      labels:
+        - performance
+        - perf
+        - seo
+        - lighthouse
+    - title: UI
+      labels:
+        - ui
+        - design
+        - tailwind
+        - styling
+    - title: Analytics & Dashboard
+      labels:
+        - analytics
+        - dashboard
+        - charts
+        - recharts
+    - title: Config & Infrastructure
+      labels:
+        - config
+        - infrastructure
+        - docker
+        - vercel
+        - supabase
+    - title: Documentation
+      labels:
+        - docs
+        - documentation
+    - title: Other Changes
+      labels:
+        - "*"

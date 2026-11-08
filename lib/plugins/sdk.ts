@@ -9,10 +9,10 @@ import type { PluginDefinition } from "./types";
  */
 export function definePlugin(plugin: PluginDefinition): PluginDefinition {
   return {
-    enabled: true,
-    configured: false,
-    settings: {},
-    configFields: [],
     ...plugin,
+    enabled: plugin.enabled ?? true,
+    configured: plugin.configured ?? false,
+    settings: plugin.settings ?? {},
+    configFields: plugin.configFields ?? [],
   };
 }
