@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Resource Download | DevResource AI Hub</title>
+  
+  <!-- OpenGraph Metadata for Instagram & Social Previews -->
+  <meta id="og-title" property="og:title" content="Creator Resource Download" />
+  <meta id="og-desc" property="og:description" content="Download free guides, prompt packs, code samples, and cheatsheets." />
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body class="bg-[#07090e] text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- ========================================================================= -->
+  <!-- TOP NAVIGATION HEADER -->
+  <!-- ========================================================================= -->
+  <header class="border-b border-slate-800/80 bg-[#07090e]/90 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
+      
+      <!-- Back to Library Link -->
+      <a href="../index.html" class="inline-flex items-center text-xs font-semibold text-slate-400 hover:text-white transition-colors group">
+        <svg class="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        <span>All Resources Library</span>
+      </a>
+
+      <!-- Right Meta / Status -->
+      <div class="flex items-center space-x-3">
+        <a href="../dashboard.html" class="hidden sm:inline-flex items-center text-xs text-indigo-400 hover:text-indigo-300 transition-colors">
+          📊 Campaign Analytics
+        </a>
+        <div class="flex items-center space-x-2 px-2.5 py-1 rounded-full bg-slate-900 border border-slate-800">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-mono">Verified Master File</span>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- MAIN RESOURCE SHOWCASE CONTAINER -->
+  <!-- ========================================================================= -->
+  <main class="flex-grow max-w-4xl mx-auto px-4 py-8 md:py-12 w-full">
+
+    <!-- Loading State -->
+    <div id="loading-state" class="text-center py-24">
+      <div class="w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+      <p class="text-sm text-slate-400 font-medium">Preparing verified master file preview...</p>
+    </div>
+
+    <!-- Error / Not Found State -->
+    <div id="error-state" class="hidden text-center py-20 glass-card rounded-3xl p-8 border border-slate-800">
+      <div class="text-4xl mb-3">📁</div>
+      <h2 class="text-lg font-bold text-white mb-1">Resource Not Found</h2>
+      <p class="text-xs text-slate-400 mb-6 max-w-sm mx-auto">This resource link may have expired or moved. Check the full resource library below.</p>
+      <a href="../index.html" class="inline-flex items-center px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-xl transition-all shadow-lg shadow-indigo-500/20">
+        Browse All Free Resources
+      </a>
+    </div>
+
+    <!-- Active Resource Presentation -->
+    <article id="resource-article" class="hidden space-y-8">
+      
+      <!-- Top Breadcrumbs & Attribution Banner -->
+      <div class="space-y-4">
+        
+        <!-- Breadcrumbs -->
+        <nav class="flex items-center space-x-2 text-xs text-slate-400 font-mono">
+          <a href="../index.html" class="hover:text-indigo-400 transition-colors">Library</a>
+          <span>/</span>
+          <span id="breadcrumb-category" class="hover:text-indigo-400">Generative AI</span>
+          <span>/</span>
+          <span id="breadcrumb-slug" class="text-slate-400 truncate">rag-starter-kit</span>
+        </nav>
+
+        <!-- Instagram Manychat Campaign Banner (Dynamic) -->
+        <div id="campaign-attribution-banner" class="hidden p-3 rounded-2xl bg-gradient-to-r from-purple-950/40 via-indigo-950/30 to-slate-900 border border-purple-500/30 flex items-center justify-between text-xs">
+          <div class="flex items-center space-x-2">
+            <span class="text-sm">✨</span>
+            <span class="text-slate-300">
+              Delivered via Instagram Reel Campaign: <strong id="banner-campaign-name" class="text-purple-300 font-mono">rag_carousel_01</strong>
+            </span>
+          </div>
+          <span class="text-[10px] font-mono text-purple-400 px-2 py-0.5 rounded bg-purple-500/10 border border-purple-500/20">
+            UTM Recorded
+          </span>
+        </div>
+
+        <!-- Category & Resource ID Badges -->
+        <div class="flex items-center space-x-2.5">
+          <span id="res-category" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 font-mono">
+            GENERATIVE AI
+          </span>
+          <span id="res-id-badge" class="px-2 py-0.5 rounded text-[11px] font-mono font-semibold bg-slate-900 text-slate-400 border border-slate-800">
+            RES-001
+          </span>
+          <span id="res-badge" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            Free Download
+          </span>
+        </div>
+
+        <!-- Resource Title (id="res-title" strictly preserved for tests) -->
+        <h1 id="res-title" class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight">
+          RAG Starter Kit: Practical Guide & Code
+        </h1>
+
+        <!-- Resource Description -->
+        <p id="res-description" class="text-base sm:text-lg text-slate-300 leading-relaxed max-w-3xl">
+          A practical introduction to retrieval-augmented generation using LangChain, ChromaDB, and hybrid semantic search.
+        </p>
+
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- CENTERPIECE FILE DOWNLOAD CARD (Prompt Section 3 Design) -->
+      <!-- ===================================================================== -->
+      <div class="glass-card rounded-3xl p-6 md:p-8 border border-indigo-500/40 bg-gradient-to-br from-slate-900/90 via-slate-900/70 to-indigo-950/40 shadow-2xl space-y-6">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+          
+          <div class="flex items-center space-x-4">
+            <div class="w-14 h-14 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 flex-shrink-0 shadow-lg shadow-indigo-600/10">
+              <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+              </svg>
+            </div>
+            <div>
+              <p id="res-filename" class="text-base font-bold text-white font-mono">RAG_Starter_Kit.pdf</p>
+              <p id="res-filemeta" class="text-xs text-slate-400 mt-0.5">PDF · 2.4 MB · Example display</p>
+            </div>
+          </div>
+
+          <!-- Download Action Button (id="res-download-btn" strictly preserved for tests) -->
+          <a id="res-download-btn" href="#" target="_blank" rel="noopener noreferrer" class="glow-button w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 rounded-2xl text-sm font-extrabold tracking-wide uppercase bg-gradient-to-r from-indigo-500 via-indigo-600 to-purple-600 text-white shadow-xl shadow-indigo-500/30 hover:opacity-95 transition-all">
+            <svg class="w-5 h-5 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+            </svg>
+            <span>DOWNLOAD RESOURCE</span>
+          </a>
+
+        </div>
+
+        <!-- Infrastructure & Verification Indicator -->
+        <div class="pt-4 border-t border-slate-800/80 flex flex-wrap items-center justify-between text-xs text-slate-400 gap-3">
+          <div class="flex items-center space-x-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span>Primary storage: <strong>Google Drive Master Vault</strong></span>
+            <span class="text-slate-600">|</span>
+            <span class="text-slate-400">Cloudflare R2 replaceable backend ready</span>
+          </div>
+
+          <div class="flex items-center space-x-2 text-[11px] font-mono text-indigo-400">
+            <span>Measurement layer active</span>
+            <span class="text-slate-600">•</span>
+            <span id="click-status-tag">Click to log download</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- TABBED RESOURCE PREVIEW: OVERVIEW, CODE, PROMPTS, ARCHITECTURE -->
+      <!-- ===================================================================== -->
+      <section class="space-y-4">
+        
+        <!-- Tab Navigation Bar -->
+        <div class="flex items-center border-b border-slate-800 space-x-1 sm:space-x-2 overflow-x-auto no-scrollbar">
+          <button type="button" onclick="switchTab('overview')" id="tab-btn-overview" class="tab-btn active px-4 py-3 text-xs md:text-sm font-semibold text-slate-300 transition-colors flex items-center space-x-1.5 whitespace-nowrap">
+            <span>📑 Guide Overview</span>
+          </button>
+          <button type="button" onclick="switchTab('code')" id="tab-btn-code" class="tab-btn px-4 py-3 text-xs md:text-sm font-semibold text-slate-400 hover:text-slate-200 transition-colors flex items-center space-x-1.5 whitespace-nowrap">
+            <span>💻 Python Boilerplate</span>
+          </button>
+          <button type="button" onclick="switchTab('prompts')" id="tab-btn-prompts" class="tab-btn px-4 py-3 text-xs md:text-sm font-semibold text-slate-400 hover:text-slate-200 transition-colors flex items-center space-x-1.5 whitespace-nowrap">
+            <span>⚡ Prompt Vault</span>
+          </button>
+          <button type="button" onclick="switchTab('diagram')" id="tab-btn-diagram" class="tab-btn px-4 py-3 text-xs md:text-sm font-semibold text-slate-400 hover:text-slate-200 transition-colors flex items-center space-x-1.5 whitespace-nowrap">
+            <span>📐 System Architecture</span>
+          </button>
+        </div>
+
+        <!-- TAB 1: OVERVIEW & TABLE OF CONTENTS -->
+        <div id="tab-pane-overview" class="glass-card rounded-2xl p-6 border border-slate-800 space-y-6">
+          <div>
+            <h3 class="text-sm font-bold uppercase tracking-wider text-indigo-400 mb-2">What You'll Learn Inside</h3>
+            <div id="res-highlights-list" class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs md:text-sm text-slate-300">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-bold uppercase tracking-wider text-indigo-400 mb-3">Structured Table of Contents</h3>
+            <div id="res-toc-list" class="space-y-2 text-xs md:text-sm text-slate-300 font-mono">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: CODE IMPLEMENTATION -->
+        <div id="tab-pane-code" class="hidden glass-card rounded-2xl p-6 border border-slate-800 space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 id="code-snippet-title" class="text-sm font-bold text-white font-mono">rag_pipeline.py</h3>
+              <p class="text-xs text-slate-400">Production-ready implementation snippet.</p>
+            </div>
+            <button type="button" onclick="copyCodeSnippet()" class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition-colors">
+              Copy Code
+            </button>
+          </div>
+
+          <div class="code-block rounded-xl p-4 overflow-x-auto">
+            <pre><code id="code-snippet-body" class="text-xs text-slate-200 font-mono leading-relaxed"></code></pre>
+          </div>
+        </div>
+
+        <!-- TAB 3: PROMPT TEMPLATES (Preserves res-prompts-section & res-prompts-container for tests) -->
+        <div id="tab-pane-prompts" class="hidden glass-card rounded-2xl p-6 border border-slate-800 space-y-4">
+          <section id="res-prompts-section">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center">
+                <span class="mr-1.5 text-indigo-400">⚡</span> Included Prompt Templates
+              </h3>
+              <span class="text-[11px] text-slate-500">1-Click Copy</span>
+            </div>
+            <div id="res-prompts-container" class="space-y-3">
+              <!-- Populated by JS -->
+            </div>
+          </section>
+        </div>
+
+        <!-- TAB 4: ARCHITECTURE DIAGRAM -->
+        <div id="tab-pane-diagram" class="hidden glass-card rounded-2xl p-6 border border-slate-800 space-y-4">
+          <div>
+            <h3 class="text-sm font-bold text-white">System Data Flow & Component Architecture</h3>
+            <p class="text-xs text-slate-400">How the components interconnect in production.</p>
+          </div>
+
+          <div class="code-block rounded-xl p-5 overflow-x-auto text-xs text-indigo-300 font-mono leading-relaxed">
+<pre>
+┌─────────────────────────┐
+│ Original PDFs / Docs    │
+└────────────┬────────────┘
+             │
+             ▼
+┌─────────────────────────┐     Embeddings (text-embedding-3-small)
+│ Semantic Chunking (600) ├─────────────────────────────────────────┐
+└────────────┬────────────┘                                         │
+             │                                                      ▼
+             ▼                                          ┌──────────────────────┐
+┌─────────────────────────┐                             │ ChromaDB / VectorDB  │
+│ Sparse BM25 Keyword idx │                             └──────────┬───────────┘
+└────────────┬────────────┘                                        │
+             │                                                     │
+             └───────────────┬─────────────────────────────────────┘
+                             │
+                             ▼
+             ┌───────────────────────────────┐
+             │ Hybrid Search & Reranking     │
+             │ (Dense Vector + BM25 Keywords)│
+             └───────────────┬───────────────┘
+                             │
+                             ▼
+             ┌───────────────────────────────┐
+             │ Context Injection Prompt Guard│
+             └───────────────┬───────────────┘
+                             │
+                             ▼
+             ┌───────────────────────────────┐
+             │ GPT-4o Zero-Hallucination Ans │
+             └───────────────────────────────┘
+</pre>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ===================================================================== -->
+      <!-- EMAIL LEAD CAPTURE SECTION -->
+      <!-- ===================================================================== -->
+      <section class="glass-card rounded-3xl p-6 md:p-8 border border-indigo-500/30 bg-slate-900/60 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="space-y-1 text-center md:text-left">
+          <h3 class="text-base font-bold text-white">Want the updated v2 when released?</h3>
+          <p class="text-xs text-slate-400">Leave your email to get revision updates, benchmark scripts, and new roadmaps.</p>
+        </div>
+
+        <form id="resource-email-form" onsubmit="handleResourceEmail(event)" class="flex w-full md:w-auto max-w-sm gap-2">
+          <input 
+            id="resource-email-input" 
+            type="email" 
+            required 
+            placeholder="Your developer email..." 
+            class="flex-grow px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+          />
+          <button type="submit" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-xl transition-colors whitespace-nowrap shadow-md shadow-indigo-600/20">
+            Notify Me
+          </button>
+        </form>
+      </section>
+
+      <!-- ===================================================================== -->
+      <!-- CREATOR ATTRIBUTION & INSTAGRAM CARD -->
+      <!-- ===================================================================== -->
+      <div class="border-t border-slate-800/80 pt-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+        <div class="flex items-center space-x-3.5 text-center sm:text-left">
+          <img id="creator-avatar" src="" alt="Creator" class="w-12 h-12 rounded-full object-cover border border-indigo-500/30" />
+          <div>
+            <p class="text-xs font-medium text-slate-400">Curated by <span id="creator-name" class="text-white font-semibold"></span></p>
+            <p class="text-[11px] text-slate-500">Tag <span id="creator-handle" class="text-indigo-400 font-mono"></span> on Instagram if this helps you build!</p>
+          </div>
+        </div>
+
+        <a id="creator-ig-link" href="#" target="_blank" rel="noopener noreferrer" class="glow-button inline-flex items-center px-5 py-2.5 rounded-xl text-xs font-semibold bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md shadow-pink-600/20 hover:opacity-95 transition-all">
+          <svg class="w-4 h-4 mr-1.5 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          Follow on Instagram ↗
+        </a>
+      </div>
+
+    </article>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- TOAST NOTIFICATION -->
+  <!-- ========================================================================= -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 pointer-events-none transition-all duration-300 max-w-sm">
+    <div class="bg-indigo-600 text-white px-4 py-3 rounded-xl shadow-xl flex items-center space-x-2 text-xs md:text-sm font-semibold">
+      <svg class="w-4 h-4 text-emerald-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+      <span id="toast-message">Copied to clipboard!</span>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../js/config.js"></script>
+  <script src="../js/analytics.js"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      // 1. Identify Resource from URL (?id=slug or ?r=slug or ?res=slug or #slug)
+      const params = new URLSearchParams(window.location.search);
+      const targetSlug = params.get('id') || params.get('r') || params.get('res') || window.location.hash.replace('#', '').trim() || 'rag-starter-kit';
+
+      const loadingEl = document.getElementById('loading-state');
+      const errorEl = document.getElementById('error-state');
+      const articleEl = document.getElementById('resource-article');
+
+      if (!targetSlug || !window.CREATOR_CONFIG || !window.CREATOR_CONFIG.resources) {
+        showError();
+        return;
+      }
+
+      const resource = window.CREATOR_CONFIG.resources.find(r => (r.slug || r.id) === targetSlug);
+
+      if (!resource) {
+        showError();
+        return;
+      }
+
+      // 2. Log Page Visit via Analytics Engine (Permanent measurement layer)
+      if (window.CreatorAnalytics) {
+        window.CreatorAnalytics.logVisit(targetSlug);
+      }
+
+      // 3. Render Profile
+      const profile = window.CREATOR_CONFIG.profile || {};
+      const creatorNameEl = document.getElementById('creator-name');
+      const creatorHandleEl = document.getElementById('creator-handle');
+      const creatorAvatarEl = document.getElementById('creator-avatar');
+      const creatorIgEl = document.getElementById('creator-ig-link');
+
+      if (creatorNameEl) creatorNameEl.textContent = profile.name || 'Alex Vance';
+      if (creatorHandleEl) creatorHandleEl.textContent = `@${profile.handle || 'creator'}`;
+      if (creatorAvatarEl && profile.avatar) creatorAvatarEl.src = profile.avatar;
+      if (creatorIgEl && profile.instagramUrl) creatorIgEl.href = profile.instagramUrl;
+
+      // 4. Render Breadcrumbs & Campaign Context
+      document.getElementById('breadcrumb-category').textContent = resource.category || 'Generative AI';
+      document.getElementById('breadcrumb-slug').textContent = resource.slug || targetSlug;
+
+      const utmCampaign = params.get('utm_campaign');
+      if (utmCampaign) {
+        const banner = document.getElementById('campaign-attribution-banner');
+        const campName = document.getElementById('banner-campaign-name');
+        if (banner && campName) {
+          campName.textContent = utmCampaign;
+          banner.classList.remove('hidden');
+        }
+      }
+
+      // 5. Render Resource Details
+      document.title = `${resource.title} | DevResource Download`;
+      document.getElementById('res-category').textContent = resource.category || 'GENERATIVE AI';
+      document.getElementById('res-id-badge').textContent = resource.resource_id || 'RES-001';
+      document.getElementById('res-badge').textContent = resource.badge || 'Free Download';
+      document.getElementById('res-title').textContent = resource.title;
+      document.getElementById('res-description').textContent = resource.description;
+      
+      const fileName = resource.fileName || `${resource.slug || 'resource'}.pdf`;
+      const fileMeta = `${resource.fileType || 'PDF'} · ${resource.fileSize || '2.4 MB'} · Example display`;
+      document.getElementById('res-filename').textContent = fileName;
+      document.getElementById('res-filemeta').textContent = fileMeta;
+
+      // 6. Setup Download Button with Event Tracking & Feedback
+      const downloadBtn = document.getElementById('res-download-btn');
+      downloadBtn.href = resource.storageUrl || resource.driveUrl || resource.file_path || '#';
+      downloadBtn.onclick = function () {
+        if (window.CreatorAnalytics) {
+          window.CreatorAnalytics.logDownload(targetSlug);
+        }
+        const tag = document.getElementById('click-status-tag');
+        if (tag) {
+          tag.textContent = '✓ Download logged (Server response served)';
+          tag.classList.add('text-emerald-400');
+        }
+        showToast('Download initiated! Opening master file...');
+      };
+
+      // 7. Render Highlights & Table of Contents
+      const highlightsContainer = document.getElementById('res-highlights-list');
+      if (highlightsContainer && resource.highlights) {
+        highlightsContainer.innerHTML = resource.highlights.map(h => `
+          <div class="flex items-start space-x-2">
+            <span class="text-emerald-400 font-bold">✓</span>
+            <span>${escapeHtml(h)}</span>
+          </div>
+        `).join('');
+      }
+
+      const tocContainer = document.getElementById('res-toc-list');
+      if (tocContainer && resource.tableOfContents) {
+        tocContainer.innerHTML = resource.tableOfContents.map((item, idx) => `
+          <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-between">
+            <span>${escapeHtml(item)}</span>
+            <span class="text-[10px] text-slate-500 font-mono">Ch. ${idx + 1}</span>
+          </div>
+        `).join('');
+      }
+
+      // 8. Render Code Snippet (Tab 2)
+      if (resource.codeSnippet) {
+        document.getElementById('code-snippet-title').textContent = resource.codeSnippet.title || 'implementation.py';
+        document.getElementById('code-snippet-body').textContent = resource.codeSnippet.code || '';
+      }
+
+      // 9. Render Sample Prompts (Tab 3)
+      const promptsSection = document.getElementById('res-prompts-section');
+      const promptsContainer = document.getElementById('res-prompts-container');
+
+      if (resource.samplePrompts && resource.samplePrompts.length > 0) {
+        promptsSection.classList.remove('hidden');
+        promptsContainer.innerHTML = resource.samplePrompts.map((p, idx) => `
+          <div class="prompt-box rounded-xl p-4 relative group">
+            <div class="flex items-center justify-between mb-2">
+              <h4 class="text-xs font-semibold text-indigo-300 uppercase tracking-wider">${escapeHtml(p.title || `Prompt ${idx + 1}`)}</h4>
+              <button type="button" 
+                onclick="copyPromptText(this)" 
+                data-prompt="${escapeAttr(p.prompt)}" 
+                class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-800 hover:bg-indigo-600 text-slate-300 hover:text-white transition-colors">
+                <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                Copy
+              </button>
+            </div>
+            <p class="text-xs md:text-sm text-slate-300 font-mono whitespace-pre-wrap leading-relaxed select-all">${escapeHtml(p.prompt)}</p>
+          </div>
+        `).join('');
+      }
+
+      // Hide loading, display article
+      loadingEl.classList.add('hidden');
+      articleEl.classList.remove('hidden');
+
+      function showError() {
+        loadingEl.classList.add('hidden');
+        errorEl.classList.remove('hidden');
+      }
+
+      function escapeHtml(str) {
+        if (!str) return '';
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+      }
+
+      function escapeAttr(str) {
+        if (!str) return '';
+        return String(str).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+      }
+
+      // Global Tab Switcher
+      window.switchTab = function (tabName) {
+        const tabs = ['overview', 'code', 'prompts', 'diagram'];
+        tabs.forEach(t => {
+          const btn = document.getElementById(`tab-btn-${t}`);
+          const pane = document.getElementById(`tab-pane-${t}`);
+          if (btn && pane) {
+            if (t === tabName) {
+              btn.classList.add('active');
+              btn.classList.remove('text-slate-400');
+              btn.classList.add('text-slate-200');
+              pane.classList.remove('hidden');
+            } else {
+              btn.classList.remove('active');
+              btn.classList.add('text-slate-400');
+              btn.classList.remove('text-slate-200');
+              pane.classList.add('hidden');
+            }
+          }
+        });
+      };
+
+      window.copyPromptText = function (btn) {
+        const text = btn.getAttribute('data-prompt');
+        if (!text) return;
+        navigator.clipboard.writeText(text).then(() => {
+          showToast('Prompt copied to clipboard!');
+          const orig = btn.innerHTML;
+          btn.innerHTML = '✓ Copied';
+          setTimeout(() => { btn.innerHTML = orig; }, 2000);
+        });
+      };
+
+      window.copyCodeSnippet = function () {
+        const code = document.getElementById('code-snippet-body').textContent;
+        if (!code) return;
+        navigator.clipboard.writeText(code).then(() => {
+          showToast('Python code copied to clipboard!');
+        });
+      };
+
+      window.handleResourceEmail = function (e) {
+        e.preventDefault();
+        const input = document.getElementById('resource-email-input');
+        if (!input) return;
+        const email = input.value.trim();
+        if (!email) return;
+
+        if (window.CreatorAnalytics) {
+          window.CreatorAnalytics.logEmailSignup(targetSlug, email);
+        }
+        showToast('Subscribed! You will receive v2 updates for this guide.');
+        input.value = '';
+      };
+
+      function showToast(msg) {
+        const toast = document.getElementById('toast');
+        const toastMsg = document.getElementById('toast-message');
+        if (!toast || !toastMsg) return;
+        toastMsg.textContent = msg;
+        toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+        toast.classList.add('translate-y-0', 'opacity-100');
+        setTimeout(() => {
+          toast.classList.remove('translate-y-0', 'opacity-100');
+          toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+        }, 3000);
+      }
+
+    })();
+  </script>
+</body>
+</html>

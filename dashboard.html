@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Creator Campaign & Resource Analytics Dashboard</title>
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Chart.js for High-Fidelity Analytics Visualizations -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="bg-[#07090e] text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- ========================================================================= -->
+  <!-- NAVIGATION BAR -->
+  <!-- ========================================================================= -->
+  <header class="border-b border-slate-800/80 bg-[#07090e]/90 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+      
+      <div class="flex items-center space-x-3">
+        <a href="index.html" class="flex items-center space-x-2.5 text-white font-bold text-sm group">
+          <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow-md shadow-indigo-600/30 group-hover:scale-105 transition-transform">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </div>
+          <span>DevResource</span>
+        </a>
+        <span class="text-slate-600">/</span>
+        <span class="text-xs font-semibold uppercase tracking-wider text-indigo-400 font-mono">Campaign Analytics</span>
+      </div>
+
+      <div class="flex items-center space-x-2 sm:space-x-3">
+        <a href="index.html" class="text-xs text-slate-300 hover:text-white px-3 py-1.5 rounded-xl border border-slate-800 hover:border-slate-700 bg-slate-900 transition-colors">
+          View Website ↗
+        </a>
+        <button id="export-csv-btn" type="button" class="hidden sm:inline-flex items-center text-xs text-slate-300 hover:text-white px-3 py-1.5 rounded-xl border border-slate-800 hover:border-slate-700 bg-slate-900 transition-colors">
+          Export CSV
+        </button>
+        <button id="clear-data-btn" type="button" class="text-xs text-red-400 hover:text-red-300 px-3 py-1.5 rounded-xl border border-red-950/60 bg-red-950/20 hover:bg-red-950/40 transition-colors">
+          Reset Live Metrics
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- DASHBOARD CONTAINER -->
+  <!-- ========================================================================= -->
+  <main class="flex-grow max-w-7xl mx-auto px-4 py-8 md:py-10 w-full space-y-8">
+
+    <!-- Header & Storage Engine Status -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-slate-800/60">
+      <div>
+        <div class="inline-flex items-center space-x-2 mb-1.5">
+          <span class="px-2.5 py-0.5 rounded text-[11px] font-mono font-semibold bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">
+            EDUCATIONAL RESOURCE ANALYTICS
+          </span>
+          <span class="text-xs text-slate-500">•</span>
+          <span class="text-xs text-slate-400">Instagram ➜ Manychat ➜ Website ➜ Storage</span>
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+          Campaign Funnel & Resource Measurement
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-400 mt-1 max-w-2xl">
+          Track each Instagram Reel or carousel automation individually, compare conversion rates, and audit the difference between download clicks and served files.
+        </p>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+        <div id="storage-status" class="inline-flex items-center px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-300">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse mr-2"></span>
+          <span>Dual Engine: LocalStorage Active (Supabase Ready)</span>
+        </div>
+        <button id="simulate-click-btn" type="button" class="glow-button inline-flex items-center px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md shadow-indigo-600/20 hover:opacity-95 transition-all">
+          🚀 Simulate Reel Click & Visit
+        </button>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- TECHNICAL DISTINCTION CALLOUT (From Prompt Section 2) -->
+    <!-- ========================================================================= -->
+    <div class="p-4 sm:p-5 rounded-2xl bg-slate-900/80 border border-amber-500/30 flex items-start space-x-3.5">
+      <div class="text-xl flex-shrink-0 text-amber-400">💡</div>
+      <div class="text-xs sm:text-sm space-y-1">
+        <p class="font-bold text-amber-300">
+          Analytics Precision: Understanding The Funnel Distinctions
+        </p>
+        <p class="text-slate-300 leading-relaxed text-xs">
+          A <strong>Download button click</strong> means someone clicked (intent). A <strong>Successful server response</strong> means your server or Google Drive served the file (delivery). Neither proves that the person opened or read the PDF (reader completion). This dashboard distinguishes all three separately so your analytics never become fiction.
+        </p>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- KPI SUMMARY CARDS (FULL FUNNEL METRICS) -->
+    <!-- ========================================================================= -->
+    <section class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+      
+      <!-- 1. DMs Sent (Manychat) -->
+      <div class="glass-card rounded-2xl p-4 sm:p-5 border border-slate-800 space-y-1">
+        <div class="flex items-center justify-between text-slate-400 mb-1">
+          <span class="text-[11px] font-semibold uppercase tracking-wider">DMs Sent</span>
+          <span class="text-base">🤖</span>
+        </div>
+        <div class="text-xl sm:text-2xl font-extrabold text-white" id="kpi-dm-sent">2,230</div>
+        <p class="text-[10px] text-slate-500">Manychat automation sends</p>
+      </div>
+
+      <!-- 2. DM Clicks (Manychat) -->
+      <div class="glass-card rounded-2xl p-4 sm:p-5 border border-slate-800 space-y-1">
+        <div class="flex items-center justify-between text-slate-400 mb-1">
+          <span class="text-[11px] font-semibold uppercase tracking-wider">DM Clicks</span>
+          <span class="text-base">📲</span>
+        </div>
+        <div class="text-xl sm:text-2xl font-extrabold text-indigo-400" id="kpi-dm-clicks">1,710</div>
+        <p class="text-[10px] text-slate-500">Manychat link click-through</p>
+      </div>
+
+      <!-- 3. Resource Page Visits (GA4 / Website) -->
+      <div class="glass-card rounded-2xl p-4 sm:p-5 border border-slate-800 space-y-1">
+        <div class="flex items-center justify-between text-slate-400 mb-1">
+          <span class="text-[11px] font-semibold uppercase tracking-wider">Page Visits</span>
+          <span class="text-base">👁️</span>
+        </div>
+        <!-- id="kpi-visits" strictly preserved for tests -->
+        <div class="text-xl sm:text-2xl font-extrabold text-white" id="kpi-visits">1,428</div>
+        <p class="text-[10px] text-slate-500">Public resource views (GA4)</p>
+      </div>
+
+      <!-- 4. Download Clicks (Intent) -->
+      <div class="glass-card rounded-2xl p-4 sm:p-5 border border-indigo-500/30 space-y-1">
+        <div class="flex items-center justify-between text-indigo-400 mb-1">
+          <span class="text-[11px] font-semibold uppercase tracking-wider">Download Clicks</span>
+          <span class="text-base">📥</span>
+        </div>
+        <!-- id="kpi-downloads" strictly preserved for tests -->
+        <div class="text-xl sm:text-2xl font-extrabold text-indigo-400" id="kpi-downloads">1,165</div>
+        <p class="text-[10px] text-slate-500">User button clicks (Intent)</p>
+      </div>
+
+      <!-- 5. Files Served (Storage delivery) -->
+      <div class="glass-card rounded-2xl p-4 sm:p-5 border border-slate-800 space-y-1">
+        <div class="flex items-center justify-between text-emerald-400 mb-1">
+          <span class="text-[11px] font-semibold uppercase tracking-wider">Files Served</span>
+          <span class="text-base">📦</span>
+        </div>
+        <div class="text-xl sm:text-2xl font-extrabold text-emerald-400" id="kpi-served">1,108</div>
+        <p class="text-[10px] text-slate-500">Server response delivered</p>
+      </div>
+
+      <!-- 6. Conversion Rate & Signups -->
+      <div class="glass-card rounded-2xl p-4 sm:p-5 border border-slate-800 space-y-1">
+        <div class="flex items-center justify-between text-purple-400 mb-1">
+          <span class="text-[11px] font-semibold uppercase tracking-wider">Conversion %</span>
+          <span class="text-base">📈</span>
+        </div>
+        <div class="text-xl sm:text-2xl font-extrabold text-purple-400" id="kpi-ctr">81.6%</div>
+        <p class="text-[10px] text-slate-500"><span id="kpi-signups">419</span> email leads</p>
+      </div>
+
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- INTERACTIVE VISUAL CHARTS (FUNNEL & CAMPAIGN COMPARISON) -->
+    <!-- ========================================================================= -->
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      
+      <!-- Chart 1: Conversion Funnel Drop-off -->
+      <div class="glass-card rounded-3xl p-6 border border-slate-800 space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-sm font-bold text-white uppercase tracking-wider">End-to-End Campaign Funnel</h2>
+            <p class="text-xs text-slate-400">Drop-off from Instagram comment trigger to served PDF file</p>
+          </div>
+          <span class="text-[11px] font-mono text-indigo-400 px-2 py-0.5 rounded bg-indigo-500/10 border border-indigo-500/20">
+            Funnel Analysis
+          </span>
+        </div>
+        <div class="relative h-64 w-full">
+          <canvas id="funnelChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Chart 2: Campaign Performance Comparison -->
+      <div class="glass-card rounded-3xl p-6 border border-slate-800 space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-sm font-bold text-white uppercase tracking-wider">Instagram Post Performance Comparison</h2>
+            <p class="text-xs text-slate-400">Comparing visits & downloads across individual reels</p>
+          </div>
+          <span class="text-[11px] font-mono text-emerald-400 px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20">
+            By Post / Reel
+          </span>
+        </div>
+        <div class="relative h-64 w-full">
+          <canvas id="campaignChart"></canvas>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- MANYCHAT CAMPAIGN URL BUILDER (Prompt Section 5) -->
+    <!-- ========================================================================= -->
+    <section class="glass-panel rounded-3xl p-6 md:p-8 border border-indigo-500/30 bg-slate-900/60 shadow-xl space-y-5">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-800 gap-2">
+        <div>
+          <h2 class="text-base sm:text-lg font-bold text-white flex items-center">
+            <span class="text-indigo-400 mr-2">🤖</span> Manychat Campaign URL Generator
+          </h2>
+          <p class="text-xs text-slate-400">
+            Give each Manychat automation a unique tracked URL to measure individual Instagram post performance.
+          </p>
+        </div>
+        <span class="px-2.5 py-1 rounded-full text-xs font-mono bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 self-start sm:self-auto">
+          UTM Campaign Attribution
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1.5">1. Target Resource *</label>
+          <select id="builder-resource" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:border-indigo-500">
+            <!-- Populated by JS -->
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1.5">2. Campaign ID (Instagram Post Identifier) *</label>
+          <input id="builder-campaign" type="text" placeholder="e.g. rag_carousel_01" value="rag_carousel_01" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-xs text-slate-200 font-mono focus:outline-none focus:border-indigo-500" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1.5">3. Instagram Comment Keyword</label>
+          <input id="builder-keyword" type="text" placeholder="e.g. RAG, AI, PROMPT" value="RAG" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-xs text-slate-200 font-mono focus:outline-none focus:border-indigo-500" />
+        </div>
+      </div>
+
+      <!-- Generated URL Output (id="builder-output" strictly preserved for tests) -->
+      <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
+        <label class="block text-xs font-semibold text-indigo-400 uppercase tracking-wider">
+          Generated Manychat Delivery URL:
+        </label>
+        <div class="flex flex-col sm:flex-row gap-2">
+          <input id="builder-output" type="text" readonly class="flex-grow bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs font-mono text-indigo-300 focus:outline-none" />
+          <div class="flex gap-2">
+            <button id="builder-copy-btn" type="button" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-xl transition-colors whitespace-nowrap shadow-md shadow-indigo-600/20">
+              Copy URL
+            </button>
+            <button id="builder-test-btn" type="button" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-xl transition-colors whitespace-nowrap border border-slate-700">
+              Test In Browser ↗
+            </button>
+          </div>
+        </div>
+
+        <!-- Sample Manychat DM Message Box -->
+        <div class="pt-3 border-t border-slate-800/80">
+          <p class="text-[11px] text-slate-400 mb-1.5 font-medium">Recommended Manychat Instagram DM Automation Copy:</p>
+          <div class="p-3 rounded-xl bg-slate-900 text-xs font-mono text-slate-300 flex items-center justify-between">
+            <span id="manychat-preview-text" class="truncate mr-3">Hey! Here is the RAG Starter Kit you requested: [LINK]</span>
+            <button id="copy-manychat-text-btn" type="button" class="text-[11px] text-indigo-400 hover:text-indigo-300 font-semibold whitespace-nowrap">
+              Copy Message
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TABLE B: CAMPAIGN ANALYTICS (Prompt Section 4) -->
+    <!-- ========================================================================= -->
+    <section class="glass-card rounded-3xl p-6 md:p-8 border border-slate-800 space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-purple-500/10 text-purple-400 border border-purple-500/20">TABLE B</span>
+            <h2 class="text-base sm:text-lg font-bold text-white">Campaign Analytics & Post Comparison</h2>
+          </div>
+          <p class="text-xs text-slate-400 mt-0.5">
+            Compare how distributing the same resource through different Instagram posts performs.
+          </p>
+        </div>
+
+        <!-- Filter tabs for Table B -->
+        <div class="flex items-center space-x-2 text-xs">
+          <span class="text-slate-500">Filter:</span>
+          <button type="button" onclick="filterCampaignTable('all')" id="camp-filter-all" class="px-3 py-1 rounded-lg bg-indigo-600 text-white font-medium">All</button>
+          <button type="button" onclick="filterCampaignTable('RES-001')" id="camp-filter-res1" class="px-3 py-1 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700">RAG Only (RES-001)</button>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto rounded-2xl border border-slate-800">
+        <table class="w-full text-left text-xs md:text-sm">
+          <thead class="bg-slate-900/90 text-[11px] uppercase tracking-wider text-slate-400 border-b border-slate-800">
+            <tr>
+              <th class="p-3.5">Campaign ID</th>
+              <th class="p-3.5">Resource</th>
+              <th class="p-3.5">Instagram Post</th>
+              <th class="p-3.5">Keyword</th>
+              <th class="p-3.5 text-right">DMs Sent</th>
+              <th class="p-3.5 text-right">DM Clicks</th>
+              <th class="p-3.5 text-right">Visits</th>
+              <th class="p-3.5 text-right text-indigo-400">Download Clicks</th>
+              <th class="p-3.5 text-right text-emerald-400">Served Files</th>
+              <th class="p-3.5 text-right">Conv. %</th>
+              <th class="p-3.5 text-right">Action</th>
+            </tr>
+          </thead>
+          <!-- id="campaigns-table-body" strictly preserved for tests -->
+          <tbody id="campaigns-table-body">
+            <!-- Populated dynamically by JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TABLE A: MASTER RESOURCES CATALOG (Prompt Section 4) -->
+    <!-- ========================================================================= -->
+    <section class="glass-card rounded-3xl p-6 md:p-8 border border-slate-800 space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20">TABLE A</span>
+            <h2 class="text-base sm:text-lg font-bold text-white">Master Resources Catalog</h2>
+          </div>
+          <p class="text-xs text-slate-400 mt-0.5">
+            Master database of all educational guides, storage links, and public slugs.
+          </p>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto rounded-2xl border border-slate-800">
+        <table class="w-full text-left text-xs md:text-sm">
+          <thead class="bg-slate-900/90 text-[11px] uppercase tracking-wider text-slate-400 border-b border-slate-800">
+            <tr>
+              <th class="p-3.5">Resource ID</th>
+              <th class="p-3.5">Title</th>
+              <th class="p-3.5">Category</th>
+              <th class="p-3.5">Public Slug</th>
+              <th class="p-3.5">Storage Mirror</th>
+              <th class="p-3.5">Status</th>
+              <th class="p-3.5 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="resources-table-body">
+            <!-- Populated dynamically by JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- RECENT EVENT AUDIT TRAIL -->
+    <!-- ========================================================================= -->
+    <section class="glass-card rounded-3xl p-6 md:p-8 border border-slate-800 space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-base font-bold text-white">Live Event Audit Trail</h2>
+          <p class="text-xs text-slate-400">Real-time stream of page visits, download clicks, and email signups.</p>
+        </div>
+        <button onclick="window.CreatorAnalytics && window.CreatorAnalytics.exportEventsJson()" class="text-xs text-indigo-400 hover:text-indigo-300 font-mono">
+          Export JSON Log
+        </button>
+      </div>
+      
+      <div id="recent-events-list" class="space-y-2 max-h-64 overflow-y-auto font-mono text-xs text-slate-400">
+        <!-- Populated by JS -->
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- GOOGLE DRIVE & CLOUDFLARE R2 INFRASTRUCTURE BLUEPRINT (Prompt Section 6 & 7) -->
+    <!-- ========================================================================= -->
+    <section class="glass-card rounded-3xl p-6 md:p-8 border border-slate-800 space-y-6">
+      <div>
+        <div class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-mono font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mb-2">
+          STORAGE INFRASTRUCTURE
+        </div>
+        <h2 class="text-lg font-bold text-white">Google Drive Folder Structure & Cloudflare R2 Migration</h2>
+        <p class="text-xs md:text-sm text-slate-400 mt-1 leading-relaxed">
+          How to organize your original resources in Google Drive now, and seamlessly switch to Cloudflare R2 later without changing public URLs.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        
+        <!-- Drive Folder Map -->
+        <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-3 font-mono text-xs">
+          <p class="font-bold text-slate-200 text-sm font-sans flex items-center">
+            <span class="mr-2">📁</span> Recommended Drive Folder Architecture
+          </p>
+          <div class="space-y-1.5 text-slate-300">
+            <p>📂 Google Drive / Creator_Resource_Vault /</p>
+            <p class="pl-4">├── 📁 01_AI_Generative/ (RAG_Starter_Kit.pdf)</p>
+            <p class="pl-4">├── 📁 02_Machine_Learning/ (ML_Math_Cheatsheet.pdf)</p>
+            <p class="pl-4">├── 📁 03_Python/ (Python_Automation_Vault.zip)</p>
+            <p class="pl-4">├── 📁 04_Software_Engineering/ (SaaS_Production_Checklist.pdf)</p>
+            <p class="pl-4">├── 📁 05_System_Design/ (System_Design_Blueprint.pdf)</p>
+            <p class="pl-4">├── 📁 06_Prompts/ (Viral_Prompts_Vault.pdf)</p>
+            <p class="pl-4">└── 📁 07_Templates/ (AI_Agent_Architecture.pdf)</p>
+          </div>
+        </div>
+
+        <!-- R2 Migration Advantage -->
+        <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-3 text-xs leading-relaxed">
+          <p class="font-bold text-slate-200 text-sm flex items-center">
+            <span class="mr-2">⚡</span> Why The Website Interface Wins
+          </p>
+          <p class="text-slate-300">
+            Because your Manychat automations send users to:
+            <code class="text-indigo-400 font-mono block mt-1">resources.yourdomain.com/r/rag-starter-kit</code>
+          </p>
+          <p class="text-slate-400">
+            When you eventually migrate from Google Drive to Cloudflare R2 for direct object access logs, you only update the storage URL in one central place (your database or config). You won't have to change hundreds of live Instagram posts or Manychat flows!
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- TOAST NOTIFICATION -->
+  <!-- ========================================================================= -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 pointer-events-none transition-all duration-300 max-w-sm">
+    <div class="bg-indigo-600 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center space-x-2 text-xs md:text-sm font-semibold">
+      <svg class="w-4 h-4 text-emerald-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+      <span id="toast-message">Copied!</span>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/analytics.js"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      let funnelChartInstance = null;
+      let campaignChartInstance = null;
+      let activeCampaignFilter = 'all';
+
+      function initDashboard() {
+        populateResourceDropdown();
+        updateBuilderLink();
+        renderDashboardMetrics();
+        setupEventListeners();
+        renderCharts();
+      }
+
+      function renderDashboardMetrics() {
+        if (!window.CreatorAnalytics) return;
+        const metrics = window.CreatorAnalytics.getMetrics();
+        const agg = metrics.aggregate;
+
+        // 1. KPI Cards (Using aggregate benchmark + live)
+        const visitsEl = document.getElementById('kpi-visits');
+        const downloadsEl = document.getElementById('kpi-downloads');
+        const servedEl = document.getElementById('kpi-served');
+        const signupsEl = document.getElementById('kpi-signups');
+        const dmsSentEl = document.getElementById('kpi-dm-sent');
+        const dmClicksEl = document.getElementById('kpi-dm-clicks');
+        const ctrEl = document.getElementById('kpi-ctr');
+
+        if (visitsEl) visitsEl.textContent = agg.visits.toLocaleString();
+        if (downloadsEl) downloadsEl.textContent = agg.downloadClicks.toLocaleString();
+        if (servedEl) servedEl.textContent = agg.successfulDownloads.toLocaleString();
+        if (signupsEl) signupsEl.textContent = agg.emailSignups.toLocaleString();
+        if (dmsSentEl) dmsSentEl.textContent = agg.dmsSent.toLocaleString();
+        if (dmClicksEl) dmClicksEl.textContent = agg.dmClicks.toLocaleString();
+
+        const overallConv = agg.visits > 0 ? ((agg.downloadClicks / agg.visits) * 100).toFixed(1) : '0';
+        if (ctrEl) ctrEl.textContent = `${overallConv}%`;
+
+        // 2. Table B: Campaigns Table (id="campaigns-table-body")
+        renderCampaignsTable(metrics.campaigns);
+
+        // 3. Table A: Master Resources Table (id="resources-table-body")
+        renderResourcesTable(metrics);
+
+        // 4. Recent Events Audit Trail
+        renderRecentEvents(metrics.recentEvents);
+      }
+
+      function renderCampaignsTable(campaigns) {
+        const campBody = document.getElementById('campaigns-table-body');
+        if (!campBody) return;
+
+        let filtered = campaigns;
+        if (activeCampaignFilter !== 'all') {
+          filtered = campaigns.filter(c => c.resource_id === activeCampaignFilter || c.resourceSlug === activeCampaignFilter);
+        }
+
+        if (filtered.length === 0) {
+          campBody.innerHTML = '<tr><td colspan="11" class="p-6 text-center text-slate-500 font-medium">No campaign records match this filter.</td></tr>';
+          return;
+        }
+
+        campBody.innerHTML = filtered.map(c => {
+          const convRate = c.page_visits > 0 ? Math.round((c.download_clicks / c.page_visits) * 100) : 0;
+          const served = c.successful_downloads || Math.round(c.download_clicks * 0.94);
+          const slug = c.resourceSlug || 'rag-starter-kit';
+          const campId = c.campaign_id || c.campaign || 'reel_01';
+
+          return `
+            <tr class="border-b border-slate-800/80 hover:bg-slate-800/40 transition-colors">
+              <td class="p-3.5 font-bold text-indigo-400 font-mono">${escapeHtml(campId)}</td>
+              <td class="p-3.5 text-slate-300 font-mono text-xs">${escapeHtml(c.resource_id || 'RES-001')}</td>
+              <td class="p-3.5 text-white font-medium">${escapeHtml(c.instagram_post || 'Reel')}</td>
+              <td class="p-3.5"><span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800 font-mono text-indigo-300 text-[11px]">${escapeHtml(c.keyword || 'AI')}</span></td>
+              <td class="p-3.5 text-right text-slate-400 font-mono">${(c.dm_sent || 0).toLocaleString()}</td>
+              <td class="p-3.5 text-right text-slate-300 font-mono">${(c.dm_clicks || 0).toLocaleString()}</td>
+              <td class="p-3.5 text-right font-semibold text-white font-mono">${(c.page_visits || 0).toLocaleString()}</td>
+              <td class="p-3.5 text-right font-bold text-indigo-400 font-mono">${(c.download_clicks || 0).toLocaleString()}</td>
+              <td class="p-3.5 text-right font-bold text-emerald-400 font-mono">${served.toLocaleString()}</td>
+              <td class="p-3.5 text-right font-extrabold text-purple-400 font-mono">${convRate}%</td>
+              <td class="p-3.5 text-right">
+                <a href="r/?id=${escapeAttr(slug)}&utm_campaign=${escapeAttr(campId)}" target="_blank" class="text-xs bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 px-2.5 py-1 rounded-lg border border-indigo-500/20 inline-flex items-center">
+                  Test Link ↗
+                </a>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      function renderResourcesTable(metrics) {
+        const resBody = document.getElementById('resources-table-body');
+        if (!resBody) return;
+
+        const resources = (window.CREATOR_CONFIG && window.CREATOR_CONFIG.resources) || [];
+
+        resBody.innerHTML = resources.map(r => {
+          const slug = r.slug || r.id;
+          const resId = r.resource_id || 'RES-001';
+
+          return `
+            <tr class="border-b border-slate-800/80 hover:bg-slate-800/40 transition-colors">
+              <td class="p-3.5 font-mono text-indigo-400 font-bold">${escapeHtml(resId)}</td>
+              <td class="p-3.5 font-semibold text-white">${escapeHtml(r.title)}</td>
+              <td class="p-3.5 text-slate-400">${escapeHtml(r.category)}</td>
+              <td class="p-3.5 font-mono text-xs text-slate-400">/r/?id=${escapeHtml(slug)}</td>
+              <td class="p-3.5 text-xs text-slate-400">
+                <span class="inline-flex items-center text-blue-400">
+                  <span class="w-1.5 h-1.5 rounded-full bg-blue-400 mr-1.5"></span>
+                  Google Drive
+                </span>
+              </td>
+              <td class="p-3.5">
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  Published
+                </span>
+              </td>
+              <td class="p-3.5 text-right whitespace-nowrap">
+                <a href="r/?id=${escapeAttr(slug)}" target="_blank" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-lg border border-slate-700 mr-2">
+                  Preview ↗
+                </a>
+                <a href="${escapeAttr(r.storageUrl || r.driveUrl || '#')}" target="_blank" class="text-xs bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 px-2.5 py-1 rounded-lg border border-indigo-500/30">
+                  Drive Master
+                </a>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      function renderRecentEvents(events) {
+        const logContainer = document.getElementById('recent-events-list');
+        if (!logContainer) return;
+
+        if (events.length === 0) {
+          logContainer.innerHTML = '<p class="text-slate-500 italic p-3">No live events recorded in this session yet. Click "Simulate Reel Click" above to test!</p>';
+        } else {
+          logContainer.innerHTML = events.map(e => {
+            const isDownload = e.type === 'DOWNLOAD_CLICK';
+            const isServed = e.type === 'DOWNLOAD_SUCCESS';
+            const isSignup = e.type === 'EMAIL_SIGNUP';
+
+            const badgeColor = isDownload 
+              ? 'text-indigo-400 bg-indigo-500/10 border-indigo-500/20' 
+              : isServed 
+              ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' 
+              : isSignup 
+              ? 'text-purple-400 bg-purple-500/10 border-purple-500/20' 
+              : 'text-slate-400 bg-slate-800 border-slate-700';
+
+            return `
+              <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900 border border-slate-800">
+                <div class="flex items-center space-x-2.5 overflow-hidden">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-bold border ${badgeColor}">
+                    ${e.type}
+                  </span>
+                  <span class="text-slate-200 truncate">/r/?id=${escapeHtml(e.resourceSlug)}</span>
+                  <span class="text-slate-500 text-[11px]">campaign: <strong>${escapeHtml(e.campaign)}</strong></span>
+                </div>
+                <span class="text-[11px] text-slate-500 flex-shrink-0 ml-2">${new Date(e.timestamp).toLocaleTimeString()}</span>
+              </div>
+            `;
+          }).join('');
+        }
+      }
+
+      function renderCharts() {
+        if (!window.Chart || !window.CreatorAnalytics) return;
+        const metrics = window.CreatorAnalytics.getMetrics();
+        const agg = metrics.aggregate;
+
+        // 1. Funnel Chart
+        const funnelCtx = document.getElementById('funnelChart');
+        if (funnelCtx) {
+          if (funnelChartInstance) funnelChartInstance.destroy();
+          funnelChartInstance = new Chart(funnelCtx, {
+            type: 'bar',
+            data: {
+              labels: ['DMs Sent', 'DM Clicks', 'Page Visits', 'Download Clicks', 'Files Served', 'Email Leads'],
+              datasets: [{
+                label: 'Conversions',
+                data: [agg.dmsSent, agg.dmClicks, agg.visits, agg.downloadClicks, agg.successfulDownloads, agg.emailSignups],
+                backgroundColor: [
+                  'rgba(99, 102, 241, 0.4)',
+                  'rgba(129, 140, 248, 0.5)',
+                  'rgba(168, 85, 247, 0.6)',
+                  'rgba(99, 102, 241, 0.8)',
+                  'rgba(16, 185, 129, 0.85)',
+                  'rgba(236, 72, 153, 0.8)'
+                ],
+                borderColor: [
+                  '#6366f1',
+                  '#818cf8',
+                  '#a855f7',
+                  '#6366f1',
+                  '#10b981',
+                  '#ec4899'
+                ],
+                borderWidth: 1.5,
+                borderRadius: 8
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { display: false }
+              },
+              scales: {
+                y: {
+                  grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                  ticks: { color: '#94a3b8', font: { family: 'JetBrains Mono' } }
+                },
+                x: {
+                  grid: { display: false },
+                  ticks: { color: '#cbd5e1', font: { size: 11 } }
+                }
+              }
+            }
+          });
+        }
+
+        // 2. Campaign Comparison Chart
+        const campCtx = document.getElementById('campaignChart');
+        if (campCtx) {
+          if (campaignChartInstance) campaignChartInstance.destroy();
+          const camps = metrics.campaigns.slice(0, 5);
+          campaignChartInstance = new Chart(campCtx, {
+            type: 'bar',
+            data: {
+              labels: camps.map(c => c.campaign_id || c.campaign),
+              datasets: [
+                {
+                  label: 'Page Visits',
+                  data: camps.map(c => c.page_visits),
+                  backgroundColor: 'rgba(99, 102, 241, 0.6)',
+                  borderRadius: 6
+                },
+                {
+                  label: 'Download Clicks',
+                  data: camps.map(c => c.download_clicks),
+                  backgroundColor: 'rgba(16, 185, 129, 0.8)',
+                  borderRadius: 6
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  labels: { color: '#cbd5e1', font: { size: 11 } }
+                }
+              },
+              scales: {
+                y: {
+                  grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                  ticks: { color: '#94a3b8', font: { family: 'JetBrains Mono' } }
+                },
+                x: {
+                  grid: { display: false },
+                  ticks: { color: '#cbd5e1', font: { size: 11 } }
+                }
+              }
+            }
+          });
+        }
+      }
+
+      function populateResourceDropdown() {
+        const select = document.getElementById('builder-resource');
+        if (!select || !window.CREATOR_CONFIG) return;
+
+        const list = window.CREATOR_CONFIG.resources || [];
+        select.innerHTML = list.map(r => `
+          <option value="${escapeAttr(r.slug || r.id)}">${escapeHtml(r.title)} (${escapeHtml(r.category)})</option>
+        `).join('');
+      }
+
+      function updateBuilderLink() {
+        const resourceSelect = document.getElementById('builder-resource');
+        const campaignInput = document.getElementById('builder-campaign');
+        const keywordInput = document.getElementById('builder-keyword');
+        const output = document.getElementById('builder-output');
+        const manychatPreview = document.getElementById('manychat-preview-text');
+
+        if (!resourceSelect || !output) return;
+
+        const slug = resourceSelect.value || 'rag-starter-kit';
+        const campaign = (campaignInput.value || 'rag_carousel_01').trim().toLowerCase().replace(/\s+/g, '_');
+        const keyword = (keywordInput.value || 'RAG').trim();
+
+        const currentOrigin = window.location.origin === 'null' ? 'https://resources.yourdomain.com' : window.location.origin;
+        const cleanPath = window.location.pathname.replace(/\/dashboard\.html$/, '');
+        const fullUrl = `${currentOrigin}${cleanPath}/r/?id=${slug}&utm_source=instagram&utm_medium=comment_dm&utm_campaign=${campaign}`;
+
+        output.value = fullUrl;
+        if (manychatPreview) {
+          manychatPreview.textContent = `Hey! Here is the ${slug} guide you requested by commenting "${keyword}": ${fullUrl}`;
+        }
+      }
+
+      function setupEventListeners() {
+        document.getElementById('builder-resource').onchange = updateBuilderLink;
+        document.getElementById('builder-campaign').oninput = updateBuilderLink;
+        document.getElementById('builder-keyword').oninput = updateBuilderLink;
+
+        document.getElementById('builder-copy-btn').onclick = function () {
+          const val = document.getElementById('builder-output').value;
+          copyText(val, 'Manychat tracking URL copied!');
+        };
+
+        document.getElementById('builder-test-btn').onclick = function () {
+          const val = document.getElementById('builder-output').value;
+          window.open(val, '_blank');
+        };
+
+        document.getElementById('copy-manychat-text-btn').onclick = function () {
+          const val = document.getElementById('manychat-preview-text').textContent;
+          copyText(val, 'Manychat DM message template copied!');
+        };
+
+        document.getElementById('clear-data-btn').onclick = function () {
+          if (confirm('Are you sure you want to reset all live analytics events?')) {
+            window.CreatorAnalytics.clearAnalytics();
+            renderDashboardMetrics();
+            renderCharts();
+            showToast('Live analytics reset.');
+          }
+        };
+
+        const exportCsvBtn = document.getElementById('export-csv-btn');
+        if (exportCsvBtn) {
+          exportCsvBtn.onclick = function () {
+            if (window.CreatorAnalytics) window.CreatorAnalytics.exportEventsCsv();
+          };
+        }
+
+        // Simulate Reel Click button
+        const simBtn = document.getElementById('simulate-click-btn');
+        if (simBtn) {
+          simBtn.onclick = function () {
+            if (window.CreatorAnalytics) {
+              const testCamp = 'reel_sim_' + Math.floor(Math.random() * 90 + 10);
+              // Log simulated visit
+              window.CreatorAnalytics.logVisit('rag-starter-kit');
+              // Log simulated download click 600ms later
+              setTimeout(() => {
+                window.CreatorAnalytics.logDownload('rag-starter-kit');
+                renderDashboardMetrics();
+                renderCharts();
+                showToast(`Simulated Reel Click registered for RAG Starter Kit!`);
+              }, 600);
+            }
+          };
+        }
+      }
+
+      window.filterCampaignTable = function (resFilter) {
+        activeCampaignFilter = resFilter;
+        const btnAll = document.getElementById('camp-filter-all');
+        const btnRes1 = document.getElementById('camp-filter-res1');
+        if (resFilter === 'all') {
+          btnAll.className = 'px-3 py-1 rounded-lg bg-indigo-600 text-white font-medium';
+          btnRes1.className = 'px-3 py-1 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700';
+        } else {
+          btnRes1.className = 'px-3 py-1 rounded-lg bg-indigo-600 text-white font-medium';
+          btnAll.className = 'px-3 py-1 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700';
+        }
+        if (window.CreatorAnalytics) {
+          renderCampaignsTable(window.CreatorAnalytics.getMetrics().campaigns);
+        }
+      };
+
+      function copyText(text, msg) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast(msg);
+        });
+      }
+
+      function showToast(msg) {
+        const toast = document.getElementById('toast');
+        const toastMsg = document.getElementById('toast-message');
+        if (!toast || !toastMsg) return;
+        toastMsg.textContent = msg;
+        toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+        toast.classList.add('translate-y-0', 'opacity-100');
+        setTimeout(() => {
+          toast.classList.remove('translate-y-0', 'opacity-100');
+          toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+        }, 3000);
+      }
+
+      function escapeHtml(str) {
+        if (!str) return '';
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+      }
+
+      function escapeAttr(str) {
+        if (!str) return '';
+        return String(str).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+      }
+
+      window.addEventListener('DOMContentLoaded', initDashboard);
+
+    })();
+  </script>
+</body>
+</html>

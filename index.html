@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>DevResource | AI & Software Engineering Resource Hub</title>
+  
+  <!-- OpenGraph / Social Metadata (Optimized for Instagram & Mobile shares) -->
+  <meta property="og:title" content="DevResource - Production-Grade AI & Engineering Resource Hub" />
+  <meta property="og:description" content="Download free RAG starter kits, system design blueprints, Python automation scripts, and cheatsheets from Instagram reels." />
+  <meta property="og:type" content="website" />
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="bg-[#07090e] text-slate-100 min-h-screen flex flex-col font-sans selection:bg-indigo-500 selection:text-white antialiased">
+
+  <!-- ========================================================================= -->
+  <!-- TOP NAVIGATION BAR -->
+  <!-- ========================================================================= -->
+  <header class="sticky top-0 z-40 border-b border-slate-800/80 bg-[#07090e]/85 backdrop-blur-md">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      
+      <!-- Logo & Brand -->
+      <a href="index.html" class="flex items-center space-x-3 group">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/25 group-hover:scale-105 transition-transform">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="text-sm font-bold tracking-tight text-white group-hover:text-indigo-300 transition-colors">DevResource</span>
+            <span class="px-1.5 py-0.5 rounded text-[10px] font-mono font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">AI & TECH</span>
+          </div>
+          <p class="text-[11px] text-slate-400">Instagram Creator Resource Hub</p>
+        </div>
+      </a>
+
+      <!-- Quick Action Navigation -->
+      <div class="flex items-center space-x-2 sm:space-x-3">
+        <!-- Google Drive Cloud Master Vault -->
+        <a id="nav-drive-btn" href="https://drive.google.com" target="_blank" rel="noopener noreferrer" class="hidden sm:inline-flex items-center text-xs font-medium px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition-colors">
+          <svg class="w-3.5 h-3.5 mr-1.5 text-blue-400" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M7.71 3.5L1.15 15l3.43 6l6.55-11.5M9.73 15L6.3 21h13.12l3.43-6M22.85 15l-6.56-11.5H9.72L16.29 15"/>
+          </svg>
+          Drive Master Vault
+        </a>
+
+        <!-- Analytics Dashboard Link -->
+        <a href="dashboard.html" class="inline-flex items-center text-xs font-semibold px-3 py-1.5 rounded-lg bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 transition-colors">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse mr-2"></span>
+          📊 Analytics Dashboard
+        </a>
+
+        <!-- Creator Dashboard / Admin Toggle -->
+        <button id="admin-toggle-btn" type="button" class="inline-flex items-center text-xs font-medium px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700/60 transition-colors">
+          ⚙️ Dashboard
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- MAIN PAGE WRAPPER -->
+  <!-- ========================================================================= -->
+  <main class="flex-grow max-w-6xl mx-auto px-4 py-8 md:py-12 w-full space-y-12">
+
+    <!-- ========================================================================= -->
+    <!-- HERO SECTION & CREATOR SPOTLIGHT -->
+    <!-- ========================================================================= -->
+    <section class="text-center relative pt-4 pb-2">
+      
+      <!-- Top Tagline Pill -->
+      <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 mb-5">
+        <span class="mr-1.5 text-indigo-400">✨</span> Direct Instagram Reel & Manychat Resource Distribution
+      </div>
+
+      <!-- Main Headline -->
+      <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight max-w-3xl mx-auto mb-4">
+        Production-Grade AI, System Design & Engineering Resources
+      </h1>
+
+      <!-- Bio / Tagline -->
+      <p id="profile-bio" class="text-sm md:text-base text-slate-300 max-w-2xl mx-auto mb-8 leading-relaxed">
+        Download battle-tested starter kits, architecture blueprints, cheatsheets, and prompts mentioned in my Instagram reels. High-signal guides designed for real engineering.
+      </p>
+
+      <!-- Search & Real-Time Filter Input -->
+      <div class="max-w-xl mx-auto mb-8">
+        <div class="relative">
+          <svg class="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+          <input 
+            id="search-input" 
+            type="text" 
+            placeholder="Search AI, RAG, System Design, Python, Prompts... (Press '/' to focus)" 
+            class="w-full pl-12 pr-12 py-3.5 rounded-2xl bg-slate-900/90 border border-slate-700/80 text-sm text-slate-100 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all shadow-xl"
+          />
+          <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-mono text-slate-400 px-2 py-0.5 rounded bg-slate-800 border border-slate-700">/</span>
+        </div>
+      </div>
+
+      <!-- Creator Social Trust Strip -->
+      <div class="flex flex-wrap items-center justify-center gap-4 text-xs text-slate-400">
+        <div class="flex items-center space-x-2">
+          <img id="profile-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80" alt="Creator Profile" class="w-7 h-7 rounded-full object-cover border border-indigo-500/40" />
+          <span class="font-semibold text-slate-200" id="profile-name">Alex Vance</span>
+          <span class="text-indigo-400 font-mono" id="profile-handle">@alexvance.ai</span>
+        </div>
+        <span class="text-slate-700 hidden sm:inline">•</span>
+        <a id="profile-ig-btn" href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="inline-flex items-center text-indigo-400 hover:text-indigo-300 font-medium transition-colors">
+          <svg class="w-4 h-4 mr-1 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          Follow on Instagram ↗
+        </a>
+        <span class="text-slate-700 hidden sm:inline">•</span>
+        <span class="text-emerald-400 flex items-center">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5"></span>
+          Verified Master Copies on Google Drive
+        </span>
+      </div>
+
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- FEATURED SPOTLIGHT: RAG STARTER KIT (Prompt Section 3 Design) -->
+    <!-- ========================================================================= -->
+    <section class="glass-panel rounded-3xl p-6 md:p-8 border border-indigo-500/30 bg-gradient-to-br from-slate-900/90 via-slate-900/60 to-indigo-950/40 shadow-2xl relative overflow-hidden">
+      
+      <!-- Subtle Decorative Glow Background -->
+      <div class="absolute -right-20 -top-20 w-80 h-80 rounded-full bg-indigo-600/10 blur-3xl pointer-events-none"></div>
+
+      <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+        
+        <div class="max-w-2xl space-y-4">
+          <!-- Badges -->
+          <div class="flex items-center space-x-2.5">
+            <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+              GENERATIVE AI
+            </span>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              ⭐ Featured Guide
+            </span>
+            <span class="text-xs font-mono text-slate-400">RES-001</span>
+          </div>
+
+          <!-- Title -->
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-snug">
+            RAG Starter Kit: Practical Guide & Code
+          </h2>
+
+          <!-- Description -->
+          <p class="text-sm sm:text-base text-slate-300 leading-relaxed">
+            A practical introduction to retrieval-augmented generation using LangChain, ChromaDB, and hybrid semantic search with cross-encoder reranking.
+          </p>
+
+          <!-- Highlights -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 text-xs text-slate-400">
+            <div class="flex items-center space-x-2">
+              <span class="text-emerald-400">✓</span>
+              <span>Hybrid Search: Dense Vector + BM25</span>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span class="text-emerald-400">✓</span>
+              <span>Parent-child semantic chunking</span>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span class="text-emerald-400">✓</span>
+              <span>Cohere reranking integration</span>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span class="text-emerald-400">✓</span>
+              <span>Production Python repo included</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Card (The Exact Design from Section 3 of Prompt) -->
+        <div class="w-full lg:w-80 flex-shrink-0 p-5 rounded-2xl bg-slate-950/80 border border-indigo-500/30 shadow-xl space-y-4 text-center">
+          
+          <div class="w-12 h-12 rounded-xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 mx-auto">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          </div>
+
+          <div>
+            <p class="text-sm font-bold text-white font-mono">RAG_Starter_Kit.pdf</p>
+            <p class="text-xs text-slate-400 mt-0.5">PDF · 2.4 MB · Example display</p>
+          </div>
+
+          <div class="space-y-2 pt-2">
+            <!-- Dedicated Page Link -->
+            <a href="r/?id=rag-starter-kit" class="glow-button w-full inline-flex items-center justify-center px-5 py-3 rounded-xl text-xs sm:text-sm font-bold bg-gradient-to-r from-indigo-500 via-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/25 hover:opacity-95 transition-all">
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+              DOWNLOAD RESOURCE
+            </a>
+
+            <!-- Quick Modal Preview Button -->
+            <button type="button" onclick="window.App.openResourceModal('rag-starter-kit')" class="w-full inline-flex items-center justify-center px-4 py-2 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition-colors">
+              ⚡ Quick Preview Code & Prompts
+            </button>
+          </div>
+
+          <div class="pt-2 border-t border-slate-900 text-[11px] text-slate-500 flex items-center justify-center space-x-1">
+            <span>Instagram trigger:</span>
+            <span class="font-mono text-indigo-400 font-semibold">Comment "RAG"</span>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- CATEGORY FILTER TABS -->
+    <!-- ========================================================================= -->
+    <section class="space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-lg md:text-xl font-bold text-white tracking-tight">Browse All Educational Resources</h2>
+          <p class="text-xs text-slate-400">Search and filter across AI, Machine Learning, Python, and System Design roadmaps.</p>
+        </div>
+        <span id="resource-count-badge" class="text-xs font-mono px-2.5 py-1 rounded-full bg-slate-800 text-slate-400 border border-slate-700/80">
+          Showing 7 resources
+        </span>
+      </div>
+
+      <!-- Category Filter Pills (Horizontal Scrollable on Mobile) -->
+      <div id="category-filters" class="flex items-center space-x-2 overflow-x-auto pb-2 no-scrollbar">
+        <!-- Rendered dynamically by js/app.js -->
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- RESOURCE CARDS GRID -->
+    <!-- ========================================================================= -->
+    <section id="resource-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <!-- Dynamically rendered by js/app.js -->
+    </section>
+
+    <!-- Empty State -->
+    <div id="empty-state" class="hidden text-center py-16">
+      <div class="text-4xl mb-3">🔍</div>
+      <h3 class="text-base font-bold text-white mb-1">No resources found</h3>
+      <p class="text-xs text-slate-400 max-w-sm mx-auto mb-4">No matching resources found for your current search or category filter.</p>
+      <button type="button" onclick="window.App.resetFilters()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-xl transition-colors">
+        Reset All Filters
+      </button>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- ARCHITECTURE EXPLAINER: THE 3-TIER SYSTEM (Prompt Section 1 & 6) -->
+    <!-- ========================================================================= -->
+    <section class="glass-card rounded-3xl p-6 md:p-8 border border-slate-800 space-y-6">
+      <div class="max-w-2xl">
+        <div class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-mono font-medium bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 mb-2">
+          SYSTEM ARCHITECTURE
+        </div>
+        <h2 class="text-xl md:text-2xl font-bold text-white tracking-tight">
+          The 3-Job Architecture Between Instagram & Your Files
+        </h2>
+        <p class="text-xs md:text-sm text-slate-400 mt-1 leading-relaxed">
+          The website is your <strong>permanent public interface</strong> and measurement layer. Google Drive is simply replaceable storage behind the scenes, allowing you to upgrade to Cloudflare R2 later without changing a single Instagram link.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        
+        <!-- Job 1: Google Drive -->
+        <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2">
+          <div class="w-9 h-9 rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400 text-sm font-bold">
+            1
+          </div>
+          <h3 class="text-sm font-bold text-white">Google Drive / R2</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Store and organize master copies of original PDFs, code samples, prompts, and ZIP archives in structured folders.
+          </p>
+          <span class="text-[11px] font-mono text-blue-400 block pt-1">Replaceable Storage Layer</span>
+        </div>
+
+        <!-- Job 2: Resource Website -->
+        <div class="p-4 rounded-2xl bg-slate-900/80 border border-indigo-500/30 space-y-2 relative">
+          <div class="w-9 h-9 rounded-xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 text-sm font-bold">
+            2
+          </div>
+          <h3 class="text-sm font-bold text-white">Your Resource Website</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Give each resource a branded public URL (<code class="text-indigo-300">/r/?id=rag-starter-kit</code>), preview contents, and log clicks, visits, and downloads.
+          </p>
+          <span class="text-[11px] font-mono text-indigo-400 block pt-1">Measurement & Trust Layer</span>
+        </div>
+
+        <!-- Job 3: Manychat Automation -->
+        <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2">
+          <div class="w-9 h-9 rounded-xl bg-purple-600/20 border border-purple-500/30 flex items-center justify-center text-purple-400 text-sm font-bold">
+            3
+          </div>
+          <h3 class="text-sm font-bold text-white">Manychat Instagram DM</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Instagram comment trigger ➜ automated DM ➜ deliver unique tracked URL (<code class="text-purple-300">?utm_campaign=rag_carousel_01</code>).
+          </p>
+          <span class="text-[11px] font-mono text-purple-400 block pt-1">Distribution Automation</span>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- EMAIL UPDATES / LEAD CAPTURE SECTION -->
+    <!-- ========================================================================= -->
+    <section class="p-6 md:p-8 rounded-3xl bg-gradient-to-r from-indigo-950/60 via-slate-900 to-slate-900 border border-indigo-500/30 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="space-y-1 text-center md:text-left">
+        <h3 class="text-lg md:text-xl font-bold text-white">Get Weekly Engineering Blueprints</h3>
+        <p class="text-xs md:text-sm text-slate-400">Receive new RAG guides, system design patterns, and Python automation code directly in your inbox.</p>
+      </div>
+
+      <form id="newsletter-form" onsubmit="window.App.handleNewsletter(event)" class="flex w-full md:w-auto max-w-md gap-2">
+        <input 
+          id="newsletter-email" 
+          type="email" 
+          required 
+          placeholder="Enter your engineer email..." 
+          class="flex-grow px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+        />
+        <button type="submit" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-xl transition-colors whitespace-nowrap shadow-lg shadow-indigo-500/20">
+          Subscribe
+        </button>
+      </form>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- CREATOR DASHBOARD / ADMIN PANEL (HIDDEN BY DEFAULT, TOGGLEABLE) -->
+    <!-- ========================================================================= -->
+    <section id="admin-dashboard" class="hidden mb-10 p-6 rounded-3xl bg-slate-900/95 border border-indigo-500/30 shadow-2xl space-y-6">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+        <div>
+          <h2 class="text-lg font-bold text-white flex items-center">
+            <span class="text-indigo-400 mr-2">⚙️</span> Creator Control Dashboard
+          </h2>
+          <p class="text-xs text-slate-400">Manage catalog resources and generate direct links for Instagram DM automations.</p>
+        </div>
+        <div class="flex items-center space-x-2">
+          <button id="export-config-btn" type="button" class="text-xs bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-3 py-1.5 rounded-lg transition-colors">
+            📋 Copy config.js
+          </button>
+          <button id="reset-config-btn" type="button" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-700">
+            Reset
+          </button>
+        </div>
+      </div>
+
+      <!-- Feature 1: Instagram DM Link Generator -->
+      <div class="p-5 rounded-2xl bg-slate-800/60 border border-slate-700/60 space-y-3">
+        <h3 class="text-xs font-semibold uppercase tracking-wider text-indigo-400">
+          🔗 Instagram DM Link Generator
+        </h3>
+        <p class="text-xs text-slate-400">
+          Select a resource to generate the direct link to put into your Instagram automation (ManyChat, etc.) so when users comment "AI", they receive this exact tracked URL.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div class="md:col-span-1">
+            <label class="block text-xs text-slate-400 mb-1">Select Resource:</label>
+            <select id="link-gen-select" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500">
+              <option value="">-- Choose a Resource --</option>
+            </select>
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-xs text-slate-400 mb-1">Your Generated DM Link:</label>
+            <div class="flex gap-2">
+              <input id="generated-link-input" type="text" readonly placeholder="Select a resource above..." class="flex-grow bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-indigo-300 font-mono focus:outline-none" />
+              <button id="copy-generated-link-btn" disabled type="button" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-xs font-semibold rounded-lg whitespace-nowrap transition-colors">
+                Copy Link
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature 2: Add New Resource Form -->
+      <div class="p-5 rounded-2xl bg-slate-800/40 border border-slate-800 space-y-3">
+        <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-300">
+          ➕ Add New Resource to Catalog
+        </h3>
+        <form id="add-resource-form" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">Resource Title *</label>
+            <input id="form-title" type="text" required placeholder="e.g. 50+ Claude Prompt Hacks" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500" />
+          </div>
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">Custom Link Slug (Optional)</label>
+            <input id="form-id" type="text" placeholder="e.g. claude-hacks (auto-generated if empty)" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500" />
+          </div>
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">Category</label>
+            <select id="form-category" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500">
+              <option value="Generative AI">Generative AI</option>
+              <option value="Machine Learning">Machine Learning</option>
+              <option value="Python">Python</option>
+              <option value="Software Engineering">Software Engineering</option>
+              <option value="System Design">System Design</option>
+              <option value="Prompts">Prompts</option>
+              <option value="Templates">Templates</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">Google Drive File Link *</label>
+            <input id="form-drive" type="url" required placeholder="https://drive.google.com/file/d/..." class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500" />
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-xs text-slate-400 mb-1">Short Description / Reel Hook</label>
+            <input id="form-desc" type="text" placeholder="Short description of what the user gets when downloading..." class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500" />
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-xs text-slate-400 mb-1">Featured Prompt Preview (Optional copyable prompt)</label>
+            <textarea id="form-prompt" rows="2" placeholder="Paste a sample prompt that users can copy directly from the preview overlay..." class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-200 font-mono focus:outline-none focus:border-indigo-500"></textarea>
+          </div>
+          <div class="md:col-span-2 flex justify-end">
+            <button type="submit" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-lg shadow transition-colors">
+              Save Resource & Generate Link
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Feature 3: Manage Existing Resources -->
+      <div>
+        <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
+          📑 Current Catalog Resources
+        </h3>
+        <div class="overflow-x-auto rounded-xl border border-slate-800">
+          <table class="w-full text-left">
+            <thead class="bg-slate-800/80 text-[11px] uppercase text-slate-400">
+              <tr>
+                <th class="p-3">Title</th>
+                <th class="p-3">Slug ID</th>
+                <th class="p-3">Category</th>
+                <th class="p-3 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-resource-table">
+              <!-- Dynamically populated by js/app.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Export Code Box -->
+      <div id="export-code-box" class="hidden p-4 rounded-xl bg-slate-950 border border-slate-800">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-mono text-indigo-400 font-semibold">js/config.js (Updated Code):</span>
+          <span class="text-[11px] text-slate-400">Paste this into js/config.js to permanently commit</span>
+        </div>
+        <textarea id="export-textarea" rows="8" readonly class="w-full bg-slate-900 p-3 rounded-lg text-xs font-mono text-slate-300 border border-slate-800"></textarea>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- RESOURCE PREVIEW & DOWNLOAD MODAL (INSTAGRAM REEL OVERLAY) -->
+  <!-- ========================================================================= -->
+  <div id="resource-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+    <div class="modal-enter glass-panel w-full max-w-2xl max-h-[92vh] rounded-3xl flex flex-col overflow-hidden shadow-2xl border border-indigo-500/30">
+      
+      <!-- Modal Header -->
+      <div class="p-5 border-b border-slate-800 flex items-start justify-between bg-slate-900/80">
+        <div>
+          <div class="flex items-center space-x-2 mb-1.5">
+            <span id="modal-category" class="text-xs font-semibold uppercase tracking-wider text-indigo-400">Resource</span>
+            <span id="modal-badge" class="px-2 py-0.5 rounded-full text-[11px] font-medium bg-indigo-500/10 text-indigo-300 border border-indigo-500/20"></span>
+          </div>
+          <h2 id="modal-title" class="text-lg md:text-xl font-bold text-white leading-snug"></h2>
+        </div>
+        <button id="modal-close-btn" type="button" aria-label="Close dialog" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Modal Body (Scrollable) -->
+      <div class="p-5 overflow-y-auto space-y-5 flex-grow">
+        
+        <!-- Description -->
+        <p id="modal-description" class="text-xs md:text-sm text-slate-300 leading-relaxed"></p>
+
+        <!-- Prompts Section -->
+        <div id="modal-prompts-section">
+          <div class="flex items-center justify-between mb-2">
+            <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center">
+              <span class="mr-1.5 text-indigo-400">⚡</span> Included Prompts & Code Snippets
+            </h3>
+            <span class="text-[11px] text-slate-500">1-Click Copy</span>
+          </div>
+          <div id="modal-prompts-container" class="space-y-3">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer / Primary Actions -->
+      <div class="p-4 border-t border-slate-800 bg-slate-900/90 space-y-2">
+        <!-- Direct Download Button to Google Drive -->
+        <a id="modal-download-btn" href="#" target="_blank" rel="noopener noreferrer" class="glow-button w-full flex items-center justify-center px-5 py-3.5 rounded-xl text-sm font-bold bg-gradient-to-r from-indigo-500 via-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/25 hover:opacity-95 transition-all">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+          Download / Open Master File in Google Drive
+        </a>
+
+        <!-- Reel Link Copy Button & Dedicated Page Link -->
+        <div class="flex items-center justify-between pt-1 text-xs text-slate-400">
+          <button id="modal-share-link-btn" type="button" class="hover:text-indigo-300 transition-colors flex items-center font-medium">
+            <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+            Copy Manychat Tracked Link
+          </button>
+          <a id="modal-dedicated-page-link" href="#" target="_blank" class="hover:text-indigo-300 transition-colors flex items-center text-xs font-semibold text-indigo-400 underline">
+            Open Full Dedicated Page ↗
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- TOAST NOTIFICATION -->
+  <!-- ========================================================================= -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 pointer-events-none transition-all duration-300 max-w-sm">
+    <div class="bg-indigo-600 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center space-x-2 text-xs md:text-sm font-semibold">
+      <svg class="w-4 h-4 text-emerald-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+      <span id="toast-message">Copied to clipboard!</span>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800/80 py-8 text-center text-xs text-slate-500 bg-[#06080d]">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p>© <span id="year"></span> <span id="footer-name">Alex Vance</span>. Public interface for AI & software engineering education.</p>
+      <div class="flex items-center space-x-4">
+        <a href="dashboard.html" class="text-slate-400 hover:text-white transition-colors">Campaign Analytics</a>
+        <a href="r/?id=rag-starter-kit" class="text-slate-400 hover:text-white transition-colors">RAG Starter Kit</a>
+        <a href="tests/index.html" class="text-slate-400 hover:text-white transition-colors">Test Suite</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+  <script src="js/config.js"></script>
+  <script src="js/analytics.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

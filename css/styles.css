@@ -1,0 +1,189 @@
+/* ==============================================================================
+   CREATOR AI RESOURCE HUB & ANALYTICS - DESIGN SYSTEM
+   Theme: Modern Developer Glassmorphism, Deep Obsidian & Vibrant Accents
+   ============================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+:root {
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --color-bg: #07090e;
+  --color-surface: #0d121f;
+  --color-surface-hover: #131b2e;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-glow: rgba(99, 102, 241, 0.35);
+  --primary-glow: rgba(99, 102, 241, 0.25);
+  --accent-glow: rgba(168, 85, 247, 0.25);
+  --emerald-glow: rgba(16, 185, 129, 0.25);
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-bg);
+  background-image: 
+    radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 85% 30%, rgba(168, 85, 247, 0.05) 0%, transparent 40%),
+    radial-gradient(circle at 15% 70%, rgba(14, 165, 233, 0.04) 0%, transparent 40%);
+  background-attachment: fixed;
+}
+
+/* Monospace font utility */
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+/* Glassmorphism helpers */
+.glass-panel {
+  background: rgba(13, 18, 31, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--color-border);
+}
+
+.glass-card {
+  background: rgba(17, 24, 39, 0.65);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(129, 140, 248, 0.4);
+  box-shadow: 0 16px 36px -12px rgba(99, 102, 241, 0.22);
+}
+
+/* Ambient glow accents */
+.ambient-glow-indigo {
+  box-shadow: 0 0 35px -8px rgba(99, 102, 241, 0.3);
+}
+
+.ambient-glow-purple {
+  box-shadow: 0 0 35px -8px rgba(168, 85, 247, 0.3);
+}
+
+.ambient-glow-emerald {
+  box-shadow: 0 0 35px -8px rgba(16, 185, 129, 0.3);
+}
+
+/* Custom smooth scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #080c14;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+/* Modal Animation */
+.modal-enter {
+  animation: modalIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Code & Prompt syntax styling */
+.code-block {
+  background: #060911;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  font-family: var(--font-mono);
+}
+
+.prompt-box {
+  background: #080d1a;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  transition: all 0.2s ease;
+}
+
+.prompt-box:hover {
+  border-color: rgba(99, 102, 241, 0.4);
+  background: #0a1122;
+}
+
+/* Animated Glow Buttons */
+.glow-button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.glow-button::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(60deg, transparent, rgba(255, 255, 255, 0.16), transparent);
+  transform: rotate(30deg);
+  transition: transform 0.6s ease;
+}
+
+.glow-button:hover::after {
+  transform: rotate(30deg) translate(55%, 55%);
+}
+
+/* Interactive Tabs */
+.tab-btn.active {
+  background: rgba(99, 102, 241, 0.15);
+  color: #818cf8;
+  border-bottom: 2px solid #6366f1;
+}
+
+/* Funnel Step Connector */
+.funnel-step {
+  position: relative;
+}
+
+.funnel-step:not(:last-child)::after {
+  content: '→';
+  position: absolute;
+  right: -14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #475569;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .funnel-step:not(:last-child)::after {
+    display: none;
+  }
+}
+
+/* Line Clamp helper */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

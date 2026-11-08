@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Creator Hub - Test Suite</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 p-8 font-sans">
+  <div class="max-w-3xl mx-auto">
+    <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-6">
+      <div>
+        <h1 class="text-2xl font-bold text-white">🧪 Creator Hub Automated Test Runner</h1>
+        <p class="text-sm text-slate-400">Verifying app integrity, configuration schema, and core features.</p>
+      </div>
+      <button onclick="runAllTests()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-sm font-semibold">
+        Re-run Tests
+      </button>
+    </div>
+
+    <!-- Summary Badge -->
+    <div id="test-summary" class="p-4 rounded-xl mb-6 bg-slate-800 border border-slate-700 flex items-center justify-between">
+      <span class="text-sm font-medium">Running tests...</span>
+    </div>
+
+    <!-- Test Results List -->
+    <div id="test-results" class="space-y-3"></div>
+  </div>
+
+  <!-- Include App Config, Analytics, and Scripts -->
+  <script src="../js/config.js"></script>
+  <script src="../js/analytics.js"></script>
+
+  <script>
+    const tests = [];
+    let passedCount = 0;
+    let failedCount = 0;
+
+    function test(name, fn) {
+      tests.push({ name, fn });
+    }
+
+    function assert(condition, message) {
+      if (!condition) {
+        throw new Error(message || 'Assertion failed');
+      }
+    }
+
+    function assertEqual(actual, expected, message) {
+      if (actual !== expected) {
+        throw new Error(message || `Expected "${expected}", but got "${actual}"`);
+      }
+    }
+
+    // ========================================================================
+    // TEST SUITE DEFINITIONS
+    // ========================================================================
+
+    test('1. Configuration - window.CREATOR_CONFIG exists and is an object', () => {
+      assert(typeof window.CREATOR_CONFIG === 'object' && window.CREATOR_CONFIG !== null, 'window.CREATOR_CONFIG is missing or invalid');
+    });
+
+    test('2. Profile Schema - profile has name, handle, and instagramUrl', () => {
+      const p = window.CREATOR_CONFIG.profile;
+      assert(p, 'profile object is missing');
+      assert(typeof p.name === 'string' && p.name.length > 0, 'profile.name is required');
+      assert(typeof p.handle === 'string' && p.handle.length > 0, 'profile.handle is required');
+      assert(typeof p.instagramUrl === 'string' && p.instagramUrl.includes('instagram.com'), 'profile.instagramUrl is invalid');
+    });
+
+    test('3. Categories Schema - categories include AI and System Design', () => {
+      const cats = window.CREATOR_CONFIG.categories;
+      assert(Array.isArray(cats), 'categories must be an array');
+      assert(cats.includes('All'), 'categories must contain "All"');
+      assert(cats.includes('AI') || cats.includes('Prompts'), 'categories must contain AI or Prompts');
+      assert(cats.length >= 4, 'categories should have multiple entries');
+    });
+
+    test('4. Resources Schema - contains valid resources with storage URLs', () => {
+      const res = window.CREATOR_CONFIG.resources;
+      assert(Array.isArray(res) && res.length > 0, 'resources array must not be empty');
+
+      res.forEach((r, idx) => {
+        const slug = r.slug || r.id;
+        assert(slug && typeof slug === 'string', `Resource [${idx}] missing slug or id`);
+        assert(r.title && typeof r.title === 'string', `Resource [${idx}] missing title`);
+        const url = r.storageUrl || r.driveUrl;
+        assert(url && typeof url === 'string', `Resource [${idx}] missing storageUrl or driveUrl`);
+        assert(r.category && typeof r.category === 'string', `Resource [${idx}] missing category`);
+      });
+    });
+
+    test('5. Sample Prompts Schema - prompts have title and prompt text', () => {
+      const resWithPrompts = window.CREATOR_CONFIG.resources.filter(r => r.samplePrompts && r.samplePrompts.length > 0);
+      assert(resWithPrompts.length > 0, 'At least one resource should have sample prompts');
+
+      resWithPrompts.forEach(r => {
+        r.samplePrompts.forEach((p, pIdx) => {
+          assert(typeof p.title === 'string', `Prompt [${pIdx}] in ${r.slug || r.id} missing title`);
+          assert(typeof p.prompt === 'string' && p.prompt.length > 10, `Prompt [${pIdx}] in ${r.slug || r.id} prompt text too short`);
+        });
+      });
+    });
+
+    test('6. Unique Slugs - each resource has a unique slug ID', () => {
+      const ids = window.CREATOR_CONFIG.resources.map(r => r.slug || r.id);
+      const uniqueIds = new Set(ids);
+      assertEqual(uniqueIds.size, ids.length, 'Duplicate resource IDs/slugs found!');
+    });
+
+    test('7. Deep Link Parameter Validation - can parse ?id=rag-starter-kit', () => {
+      const testSearch = '?id=rag-starter-kit';
+      const urlParams = new URLSearchParams(testSearch);
+      const targetId = urlParams.get('id');
+      assertEqual(targetId, 'rag-starter-kit');
+      
+      const found = window.CREATOR_CONFIG.resources.find(r => (r.slug || r.id) === targetId);
+      assert(found !== undefined, 'Target resource should exist in config');
+    });
+
+    test('8. Filter Logic - filtering by category returns matching items only', () => {
+      const targetCat = 'AI';
+      const filtered = window.CREATOR_CONFIG.resources.filter(r => r.category.toLowerCase() === targetCat.toLowerCase());
+      assert(filtered.length > 0, 'Should find at least 1 resource in AI');
+      filtered.forEach(r => assertEqual(r.category, targetCat));
+    });
+
+    test('9. Search Query Logic - searching "RAG" returns relevant resources', () => {
+      const query = 'rag';
+      const results = window.CREATOR_CONFIG.resources.filter(r => {
+        const titleMatch = (r.title || '').toLowerCase().includes(query);
+        const descMatch = (r.description || '').toLowerCase().includes(query);
+        const tagsMatch = (r.tags || []).some(t => t.toLowerCase().includes(query));
+        return titleMatch || descMatch || tagsMatch;
+      });
+      assert(results.length > 0, 'Search for "RAG" should return results');
+    });
+
+    test('10. Analytics Engine - window.CreatorAnalytics logs visits and downloads', () => {
+      assert(typeof window.CreatorAnalytics === 'object', 'CreatorAnalytics missing');
+      window.CreatorAnalytics.clearAnalytics();
+      
+      const v = window.CreatorAnalytics.logVisit('rag-starter-kit');
+      assertEqual(v.type, 'PAGE_VISIT');
+      assertEqual(v.resourceSlug, 'rag-starter-kit');
+
+      const d = window.CreatorAnalytics.logDownload('rag-starter-kit');
+      assertEqual(d.type, 'DOWNLOAD_CLICK');
+
+      const metrics = window.CreatorAnalytics.getMetrics();
+      assertEqual(metrics.totalVisits, 1, 'Visits count mismatch');
+      assertEqual(metrics.totalDownloads, 1, 'Downloads count mismatch');
+      assertEqual(metrics.overallConversionRate, 100, 'CTR mismatch');
+    });
+
+    test('11. Manychat UTM URL Builder Logic - formats full URL properly', () => {
+      const slug = 'rag-starter-kit';
+      const campaign = 'rag_carousel_01';
+      const testUrl = `https://resources.yourdomain.com/r/?id=${slug}&utm_source=instagram&utm_medium=comment_dm&utm_campaign=${campaign}`;
+      const parsed = new URL(testUrl);
+      assertEqual(parsed.searchParams.get('id'), slug);
+      assertEqual(parsed.searchParams.get('utm_campaign'), campaign);
+      assertEqual(parsed.searchParams.get('utm_source'), 'instagram');
+      assertEqual(parsed.searchParams.get('utm_medium'), 'comment_dm');
+    });
+
+    test('10. Slugify Helper - handles special characters and spaces correctly', () => {
+      function slugify(text) {
+        return text.toString().toLowerCase()
+          .replace(/\s+/g, '-')
+          .replace(/[^\w\-]+/g, '')
+          .replace(/\-\-+/g, '-')
+          .replace(/^-+/, '')
+          .replace(/-+$/, '');
+      }
+      assertEqual(slugify('My Brand New Reel Resource! 🚀'), 'my-brand-new-reel-resource');
+      assertEqual(slugify('Top 10 Prompts & Tricks'), 'top-10-prompts-tricks');
+    });
+
+    // ========================================================================
+    // RUNNER EXECUTION
+    // ========================================================================
+
+    function runAllTests() {
+      passedCount = 0;
+      failedCount = 0;
+      const resultsContainer = document.getElementById('test-results');
+      const summaryContainer = document.getElementById('test-summary');
+      resultsContainer.innerHTML = '';
+
+      tests.forEach((t) => {
+        let passed = false;
+        let errorMessage = '';
+
+        try {
+          t.fn();
+          passed = true;
+          passedCount++;
+        } catch (e) {
+          failedCount++;
+          errorMessage = e.message;
+        }
+
+        const div = document.createElement('div');
+        div.className = `p-4 rounded-xl border flex items-start justify-between ${
+          passed 
+            ? 'bg-emerald-950/30 border-emerald-800/50 text-emerald-200' 
+            : 'bg-red-950/30 border-red-800/50 text-red-200'
+        }`;
+
+        div.innerHTML = `
+          <div>
+            <div class="flex items-center space-x-2">
+              <span>${passed ? '✅' : '❌'}</span>
+              <span class="font-medium text-sm">${t.name}</span>
+            </div>
+            ${errorMessage ? `<p class="text-xs text-red-300 mt-1 pl-6 font-mono">${errorMessage}</p>` : ''}
+          </div>
+          <span class="text-xs font-semibold uppercase px-2 py-0.5 rounded ${
+            passed ? 'bg-emerald-900/60 text-emerald-300' : 'bg-red-900/60 text-red-300'
+          }">${passed ? 'PASS' : 'FAIL'}</span>
+        `;
+
+        resultsContainer.appendChild(div);
+      });
+
+      const allPassed = failedCount === 0;
+      summaryContainer.className = `p-4 rounded-xl mb-6 border flex items-center justify-between ${
+        allPassed 
+          ? 'bg-emerald-900/20 border-emerald-500/30 text-emerald-300' 
+          : 'bg-red-900/20 border-red-500/30 text-red-300'
+      }`;
+
+      summaryContainer.innerHTML = `
+        <div>
+          <span class="font-bold text-base">${allPassed ? '🎉 All Tests Passed!' : '⚠️ Some Tests Failed'}</span>
+          <p class="text-xs opacity-80 mt-0.5">${passedCount} passed, ${failedCount} failed out of ${tests.length} assertions.</p>
+        </div>
+        <span class="text-xs font-mono font-bold px-3 py-1 rounded-full ${allPassed ? 'bg-emerald-500 text-slate-950' : 'bg-red-500 text-white'}">
+          ${Math.round((passedCount / tests.length) * 100)}% SUCCESS
+        </span>
+      `;
+    }
+
+    // Run automatically on load
+    window.addEventListener('DOMContentLoaded', runAllTests);
+  </script>
+</body>
+</html>
